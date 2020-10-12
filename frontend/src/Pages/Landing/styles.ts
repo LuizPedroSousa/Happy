@@ -1,14 +1,17 @@
 import styled, { keyframes } from 'styled-components';
 import backgroundLight from '../../Assets/Images/landing_background_light.svg';
 import { bounceIn, bounceInLeft } from 'react-animations';
-
+import heroImg from '../../Assets/Images/hero.svg';
 export const Container = styled.div`
     height: 100vh;
     width: 100vw;
     background-size: cover;
     background-image: url(${backgroundLight});
     padding: 1.4rem;
-    `;
+    @media(min-width: 1120px){
+        padding: 0 8rem;
+    }
+`;
 
 
 export const Header = styled.div`
@@ -28,6 +31,12 @@ export const Header = styled.div`
         }
         p{
             font-size: 1.4rem;
+        }
+    }
+    @media(min-width: 1120px){
+        padding: 4rem 0;
+        img{
+            width: 10rem;
         }
     }
 `;
@@ -76,5 +85,42 @@ export const ContentWrapper = styled.div`
             background-color: ${props => props.theme.colors.buttonPrimaryDark};
             color: ${props => props.theme.colors.buttonTextDark};
         }
+    }
+    @media(min-width: 1120px){
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+        h1{
+            margin: 2rem 0;
+            font-size: 4rem;
+            line-height: 4rem;
+            max-width: 12rem;
+        }
+        p{
+            max-width: 16rem;
+            font-size: 1rem;
+        }
+        img{
+            display: none;
+        }
+        a{
+            position: relative;
+            top: 2.5rem;
+        }
+    }
+`;
+
+export const ImgDesk = styled.div`
+    display: none;
+    @media(min-width: 1120px){
+        padding: 2rem;
+        height: 80%;
+        right: 10rem;
+        top: 5rem;
+        position: absolute;
+        display: flex;
+        width: 100%;
+        background: url(${heroImg}) no-repeat 80% center;
+        background-size: contain;
     }
 `;

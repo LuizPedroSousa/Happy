@@ -4,6 +4,7 @@ import {
   Container,
   ContentWrapper,
   Header,
+  ImgDesk,
 } from './styles';
 
 import { BsArrowRightShort } from 'react-icons/bs';
@@ -22,12 +23,17 @@ const Landing: React.FC = () => {
         </main>
       </Header>
       <ContentWrapper>
-        <h1>Leve a felicidade para o mundo.</h1>
-        <p>
-          Visite orfanatos e mude o dia
-          de muitas crianças.
-        </p>
+        <div>
+          <h1>Leve a felicidade para o mundo.</h1>
+          <p>
+            Visite orfanatos e mude o dia
+            de muitas crianças.
+          </p>
+        </div>
         <img src={heroImg} alt="crianças" />
+        <ImgDesk>
+        .
+        </ImgDesk>
         <Link to="">
           <span>
             <BsArrowRightShort />
