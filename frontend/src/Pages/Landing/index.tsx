@@ -32,9 +32,9 @@ const Landing: React.FC = () => {
         </div>
         <img src={heroImg} alt="crianças" />
         <ImgDesk>
-        .
+        
         </ImgDesk>
-        <Link to="">
+        <Link to="map">
           <span>
             <BsArrowRightShort />
           </span>
