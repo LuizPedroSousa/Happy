@@ -30,6 +30,14 @@ export default class orphanagesController {
         } = req.body;
 
         const orphanagesRepository = getRepository(Orphanages);
+
+        const reqImages = req.files as Express.Multer.File[];
+
+        const images = reqImages.map(images => {
+            return { path: images.filename }
+        })
+
+
         const orphanage = orphanagesRepository.create({
             name,
             latitude,
@@ -38,6 +46,7 @@ export default class orphanagesController {
             instructions,
             opening_hours,
             open_on_weekends,
+            images,
         });
         try {
             await orphanagesRepository.save(orphanage);
@@ -58,7 +67,7 @@ export default class orphanagesController {
         const orphanagesRepository = getRepository(Orphanages);
         const orphanage = await orphanagesRepository.findOneOrFail(id);
 
-        if(!orphanage)
+        if (!orphanage)
             return res.status(400).json({
                 error: 'Orphanage not found',
             });
