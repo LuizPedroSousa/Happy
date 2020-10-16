@@ -7,14 +7,18 @@ import {
 
 interface FieldsetProps {
   legend: string;
+  className?: string;
 }
 
-const Fieldset: React.FC<FieldsetProps> = ({ legend }) => {
+const Fieldset: React.FC<FieldsetProps> = ({ legend, children, className }) => {
   return (
-    <Wrapper>
+    <Wrapper
+      className={className}
+    >
       <Legend>
         {legend}
       </Legend>
+      {children}
     </Wrapper>
   );
 };

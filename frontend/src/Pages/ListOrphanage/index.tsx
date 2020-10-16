@@ -1,22 +1,20 @@
 import React from 'react';
 
-import {
-  Container,
-  Content,
-  Title,
-} from './styles';
+import { Container, Content, Title } from './styles';
 
+import Form from './FormList'
 import Aside from '../../Components/AsideBack';
-import Form from './FormCreateOrphanage';
 
-const CreateOrphanage: React.FC = () => {
+const ListOrphanage: React.FC = () => {
   return (
     <Container>
       <Aside />
       <section>
         <main>
           <Content>
-            <Title>Adicione um orfanato</Title>
+            <Title >
+              Orfanato
+            </Title>
             <Form />
           </Content>
         </main>
@@ -25,4 +23,4 @@ const CreateOrphanage: React.FC = () => {
   );
 };
 
-export default CreateOrphanage;
+export default ListOrphanage;

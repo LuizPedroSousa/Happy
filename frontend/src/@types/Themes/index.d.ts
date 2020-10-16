@@ -18,6 +18,8 @@ declare module 'styled-components' {
             outlineBase: string,
             input: string,
             inputOutline: string,
+            boxUtilities: string,
+            alert: string,
         }
     }
 }

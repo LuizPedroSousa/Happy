@@ -16,6 +16,8 @@ const light = {
         outlineBase: '#DDE3F0',
         input: '#F5F8FA',
         inputOutline: '#A1E9C5',
+        boxUtilities: '#B3DAE2',
+        alert: '#FF669D',
     }
 }
 

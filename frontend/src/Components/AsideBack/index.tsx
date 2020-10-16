@@ -1,6 +1,6 @@
 import React from 'react';
-import Aside from '../../../Components/Aside';
-import markImg from '../../../Assets/Images/mark_down_map.svg';
+import Aside from '../Aside';
+import markImg from '../../Assets/Images/mark_down_map.svg';
 
 import { useHistory } from 'react-router-dom';
 

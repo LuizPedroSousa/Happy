@@ -66,7 +66,7 @@ const OrphanagesMap: React.FC = () => {
             className='popupMark'
           >
             Eliza maria
-            <Link to="/orp" component={Arrow}>
+            <Link to="/listOrphanage/:1" component={Arrow}>
               <span>
                 <BsArrowRightShort />
               </span>

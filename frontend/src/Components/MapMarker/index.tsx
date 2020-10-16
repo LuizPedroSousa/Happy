@@ -22,8 +22,11 @@ const iconMarker = Leaflet.icon({
   popupAnchor: [130, 2],
 });
 
+interface MapProps {
+  Title?: string;
+}
 
-const MapMarker: React.FC = () => {
+const MapMarker: React.FC<MapProps> = ({ Title }) => {
   //Contexts
   const { title } = useContext(ThemeContext);
 
@@ -48,8 +51,14 @@ const MapMarker: React.FC = () => {
         >
         </Marker>
       </Map>
-      <Location>
-        <p>Clique no mapa para adicionar a localização</p>
+      <Location
+        className="locationMap"
+      >
+        <p>{
+          Title ? Title
+            :
+            'Clique no mapa para adicionar a localização'}
+        </p>
       </Location>
     </Container>
   );
