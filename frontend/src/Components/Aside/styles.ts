@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import AsideBackground from '../../Assets/Images/Aside_background.svg';
+
+
 export const Wrapper = styled.aside`
     background-color: ${props => props.theme.colors.primary};
     background: url(${AsideBackground}) center;

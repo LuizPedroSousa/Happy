@@ -32,4 +32,10 @@ export const TextAreaBlock = styled.div`
         border-radius: 1rem;
         color: ${props => shade(0.2, props.theme.colors.primary)};
     }
+
+    @media(min-width: 1120px){
+        textarea{
+            height: 8rem;
+        }
+    }
 `;

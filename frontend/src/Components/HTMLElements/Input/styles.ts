@@ -26,4 +26,11 @@ export const InputBlock = styled.div`
         color: ${props => shade(0.2, props.theme.colors.primary)};
         background-color: ${props => props.theme.colors.input};
     }
+
+    @media(min-width: 1120px){
+        input{
+            margin: .5rem 0 0;
+            padding: 1rem 2rem;
+        }
+    }
 `;

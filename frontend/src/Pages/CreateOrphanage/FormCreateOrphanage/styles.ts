@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+
 export const Content = styled.div`
     margin: 0 0 10rem;
     padding: 4rem 2rem;
@@ -17,10 +18,12 @@ export const Label = styled.label`
 
 export const ImagesContent = styled.div`
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items:center;
+    gap: 1rem;
     flex-wrap: wrap;
     width: 100%;
+    margin: 0 0 2rem;
 `;
 
 export const ImgSelected = styled.div`
@@ -39,6 +42,7 @@ export const ImgSelected = styled.div`
 
 export const OpenOnweekends = styled.div`
     margin: 2rem 0 3rem;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items:center;

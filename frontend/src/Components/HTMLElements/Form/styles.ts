@@ -11,6 +11,10 @@ export const Content = styled.form`
     flex-direction: column;
     align-items:center;
     justify-content:center;
+    @media(min-width: 1120px){
+        padding: 4rem 4rem;
+        width: 40rem;
+    }
 `;
 
 

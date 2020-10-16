@@ -1,9 +1,12 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+import { bounceIn, tada } from 'react-animations';
 
 import { lighten } from 'polished';
 
 export const Header = styled.header`
     img{
+        animation: ${keyframes`${bounceIn}`} 2s 1s linear;
         margin: .8rem 0 0;
         width: 3.5rem;
     }
@@ -11,6 +14,7 @@ export const Header = styled.header`
 
 export const Footer = styled.footer`
     button{
+        animation: ${keyframes`${tada}`} 1s 1s linear;
         width: 3.8rem;
         height: 3.8rem;
         display: flex;
