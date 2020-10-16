@@ -1,14 +1,16 @@
 import React from 'react';
+import Aside from '../../../Components/Aside';
 
 import {
-  Wrapper,
   Header,
   Footer,
 } from './styles';
+
 import markImg from '../../../Assets/Images/mark_down_map.svg';
-const Aside: React.FC = () => {
+
+const AsideMap: React.FC = () => {
   return (
-    <Wrapper>
+    <Aside>
       <Header>
         <img src={markImg} alt="markermap" />
         <strong>Escolha</strong>
@@ -25,8 +27,8 @@ const Aside: React.FC = () => {
         <strong>São Paulo</strong>
         <span>São paulo Zona Norte</span>
       </Footer>
-    </Wrapper>
+    </Aside>
   );
-};
+}
 
-export default Aside;
+export default AsideMap;

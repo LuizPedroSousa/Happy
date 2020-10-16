@@ -7,11 +7,17 @@ declare module 'styled-components' {
             white: string,
             background: string,
             primary: string,
+            primaryDark: string,
             secondary: string,
             buttonText: string,
             buttonTextDark: string,
             buttonPrimary: string,
             buttonPrimaryDark: string,
+            textComplement: string,
+            buttonForm: string,
+            outlineBase: string,
+            input: string,
+            inputOutline: string,
         }
     }
 }
