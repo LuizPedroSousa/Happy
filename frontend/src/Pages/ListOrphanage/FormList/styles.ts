@@ -2,9 +2,17 @@ import styled from 'styled-components';
 
 import backMapImg from '../../../Assets/Images/map_background.svg';
 
-export const OphanageBackground = styled.img`
+export const OphanageBackground = styled.div`
     width: 100%;
-    border-radius: 1rem 1rem 0 0;
+    overflow: hidden;
+    height: 14rem;
+    img{
+        width: 100%;
+        border-radius: 1rem 1rem 0 0;
+    }
+    @media(min-width: 1120px){
+        height: 20rem;
+    }
 `;
 
 export const Content = styled.div`
@@ -12,6 +20,9 @@ export const Content = styled.div`
     .FirstFieldset{
         display: flex;
         flex-direction: column;
+        legend{
+            font-weight: 800;
+        }
         p{
             font-size: 1rem;
             margin: 0 0 1rem;
@@ -34,8 +45,29 @@ export const Content = styled.div`
         background: url(${backMapImg}) center;
         p{
             color: ${props => props.theme.colors.primaryDark};
-            margin: 0 ;
+            margin: 0 !important;
         }
+    }
+
+    @media(min-width: 1120px){
+        .FirstFieldset,
+        .LastFieldset{
+            legend{
+                margin: 0 0 1.8rem;
+                font-size: 2.8rem;
+            }
+            p{
+                margin: 0 0 3rem;
+            }
+        }
+
+        .LastFieldset{
+            p{
+                margin: 0;
+            }
+        }
+
+        padding: 0 4rem;
     }
 `;
 
@@ -56,6 +88,11 @@ export const ImagesGroup = styled.div`
                 opacity: 80%;
         }
     }
+
+    @media(min-width: 1120px){
+        margin: 1.6rem 0 4rem;
+    }
+
 `;
 
 export const CardsContainer = styled.div`

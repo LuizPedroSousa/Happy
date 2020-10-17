@@ -26,8 +26,10 @@ export const Submit = styled.button`
     outline: 0;
     border-radius: 1rem;
     width: 100%;
+    cursor: pointer;
     padding: .5rem 0;
     :hover{
+        margin: 2rem 0 1rem;
         background-color: ${props => lighten(0.2, props.theme.colors.buttonForm)};
     }
 `;

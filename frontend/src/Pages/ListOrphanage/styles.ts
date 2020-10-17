@@ -51,4 +51,18 @@ export const Content = styled.div`
         align-items:center;
         width: calc(100% - 2rem);
     }
+    @media(min-width: 1120px){
+        margin: 0 16rem 0;
+        form{
+            width: 40rem;
+        }
+
+        button{
+            justify-content: space-around;
+            padding: 1rem 9rem;
+            flex-direction: row;
+            margin: 4rem 0 0;
+            width: calc(100% - 5rem);
+        }
+    }
 `;

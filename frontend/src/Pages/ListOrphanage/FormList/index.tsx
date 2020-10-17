@@ -22,9 +22,9 @@ const FormList: React.FC = () => {
   const imagesPreview = [
     { src: 'http://127.0.0.1:8887/me.jpg', key: '1' },
     { src: 'http://127.0.0.1:8887/heart-icon-y1k.png', key: '2' },
-    { src: 'http://127.0.0.1:8887/me.jpg', key: '3' },
-    { src: 'http://127.0.0.1:8887/me.jpg', key: '4' },
-    { src: 'http://127.0.0.1:8887/me.jpg', key: '5' },
+    { src: 'http://127.0.0.1:8887/zenvia.webp', key: '3' },
+    { src: 'http://127.0.0.1:8887/dev.webp', key: '4' },
+    { src: 'http://127.0.0.1:8887/X.gif', key: '5' },
   ]
 
   const [viewImage, setViewImage] = useState([{ src: imagesPreview[0].src }]);
@@ -34,10 +34,12 @@ const FormList: React.FC = () => {
       buttonName="Entrar em contato"
       icon={<FaWhatsapp />}
     >
-      <OphanageBackground
-        src={viewImage[0].src}
-        alt="cat"
-      />
+      <OphanageBackground>
+        <img
+          src={viewImage[0].src}
+          alt="cat"
+        />
+      </OphanageBackground>
       <Content>
         <ImagesGroup>
           {
