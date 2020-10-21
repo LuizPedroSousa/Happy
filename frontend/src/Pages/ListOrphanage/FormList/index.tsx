@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Form from '../../../Components/HTMLElements/Form';
 
 import { FaWhatsapp } from 'react-icons/fa';
+
+import { Marker } from 'react-leaflet';
 
 import Map from '../../../Components/MapMarker';
 import Fieldset from '../../../Components/HTMLElements/Fieldset';
@@ -17,17 +19,57 @@ import WeekendsCard from './WeekendsCard';
 import NoWeekendsCard from './NoWeekendsCard';
 
 
+import { useParams } from 'react-router-dom';
+import markerIcon from '../../../Assets/Images/mark_down_map.svg';
+import Leaflet from 'leaflet';
+import api from '../../../Services/api';
+
+const iconMarker = Leaflet.icon({
+  iconUrl: markerIcon,
+  iconSize: [58, 68],
+  iconAnchor: [29, 68],
+  popupAnchor: [130, 2],
+});
+
+interface OrphanageProps {
+  images: Array<{
+    url: string;
+  }>;
+  latitude: number;
+  longitude: number;
+  name: string;
+  about: string;
+  instructions: string;
+  opening_hours: string;
+  open_on_weekends: boolean;
+}
+
+interface OrphanageParams {
+  id: string;
+}
+
 const FormList: React.FC = () => {
   //States
-  const imagesPreview = [
-    { src: 'http://127.0.0.1:8887/me.jpg', key: '1' },
-    { src: 'http://127.0.0.1:8887/heart-icon-y1k.png', key: '2' },
-    { src: 'http://127.0.0.1:8887/zenvia.webp', key: '3' },
-    { src: 'http://127.0.0.1:8887/dev.webp', key: '4' },
-    { src: 'http://127.0.0.1:8887/X.gif', key: '5' },
-  ]
+  const [orphanages, setOrphanages] = useState<OrphanageProps>();
+  const params = useParams<OrphanageParams>();
 
-  const [viewImage, setViewImage] = useState([{ src: imagesPreview[0].src }]);
+  const [viewImage, setViewImage] = useState('');
+
+
+
+  useEffect(() => {
+    api.get(`/orphanages/show/${params.id}`)
+      .then(res => {
+        console.log(res.data);
+        setOrphanages(res.data.orphanage)
+        const img = res.data.orphanage.images[0].url;
+        setViewImage(img);
+      });
+  }, [params.id]);
+
+  useEffect(() => {
+    console.log(viewImage);
+  }, [viewImage])
 
   return (
     <Form
@@ -36,48 +78,61 @@ const FormList: React.FC = () => {
     >
       <OphanageBackground>
         <img
-          src={viewImage[0].src}
+          src={`${viewImage}`}
           alt="cat"
         />
       </OphanageBackground>
       <Content>
         <ImagesGroup>
           {
-            imagesPreview.map(img =>
+            orphanages?.images.map(img =>
               <img
-                key={img.key}
-                src={img.src}
-                onClick={() => setViewImage([{ src: img.src }])}
+                key={img.url}
+                src={img.url}
+                alt={img.url}
+                style={viewImage === img.url ? {} : { opacity: '60%' }}
+                onClick={() => setViewImage(img.url)}
               />
             )
           }
         </ImagesGroup>
         <Fieldset
-          legend="Orf. Eliza Maria"
+          legend={`${orphanages?.name}`}
           className="FirstFieldset"
         >
           <p>
-            Presta assistência a crianças de 06 a 15 anos que se encontre em situação de risco e/ou vulnerabilidade social.
+            {`${orphanages?.about}`}
           </p>
           <Map
             Title="Ver rotas no Google Maps"
-          />
+            MarkDown={
+              <Marker
+                position={[orphanages?.latitude || 0, orphanages?.longitude || 0]}
+                icon={iconMarker} >
+              </Marker>
+            }
+          >
+          </Map>
         </Fieldset>
         <Fieldset
           legend="Instruções para visita"
           className="LastFieldset"
         >
           <p>
-            Venha como se sentir a vontade e traga muito amor e paciência para dar.
+            {`${orphanages?.instructions}`}
           </p>
         </Fieldset>
         <CardsContainer>
           <VisitCard
-            info="Horário de visitas
-          Das 18h até 8h"
+            info={`${orphanages?.opening_hours}`}
           />
-          <WeekendsCard />
-          <NoWeekendsCard />
+          {
+            orphanages?.open_on_weekends
+              ?
+              <WeekendsCard />
+              :
+              <NoWeekendsCard />
+          }
         </CardsContainer>
       </Content>
     </Form>

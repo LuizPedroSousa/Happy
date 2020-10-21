@@ -1,4 +1,4 @@
-import React, { FormEvent, useContext, useRef, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useContext, useRef, useState } from 'react';
 import Fieldset from '../../../Components/HTMLElements/Fieldset';
 import Form from '../../../Components/HTMLElements/Form';
 import Input from '../../../Components/HTMLElements/Input';
@@ -16,18 +16,46 @@ import {
 } from './styles';
 import { lighten, shade } from 'polished';
 import { ThemeContext } from 'styled-components';
+import { Marker } from 'react-leaflet';
+import Leaflet, { LeafletMouseEvent } from 'leaflet';
+
+import { useHistory } from 'react-router-dom';
+
+import markerIcon from '../../../Assets/Images/mark_down_map.svg';
+import api from '../../../Services/api';
+
+interface PositionProps {
+    lat: number;
+    lng: number;
+}
+
 
 const FormCreateOrphanage: React.FC = () => {
+    const iconMarker = Leaflet.icon({
+        iconUrl: markerIcon,
+        iconSize: [58, 68],
+        iconAnchor: [29, 68],
+        popupAnchor: [130, 2],
+    });
+
     //Contexts
     const { colors } = useContext(ThemeContext);
 
     //States
-    const [images, setImages] = useState([{ src: '' }]);
+    const [images, setImages] = useState<File[]>([]);
+    const [imagesPreview, setImagesPreview] = useState<string[]>([]);
     const [openOnWeekends, setOpenOnWeekends] = useState(false);
+    const [markerPosition, setMarkerPosition] = useState<PositionProps>();
 
     //Refs
     const Name = useRef<HTMLInputElement>(null);
+    const About = useRef<HTMLTextAreaElement>(null);
+    const Whatasapp = useRef<HTMLInputElement>(null);
+    const Opening_in_hours = useRef<HTMLInputElement>(null);
+    const Instructions = useRef<HTMLTextAreaElement>(null);
 
+    //Others Hooks
+    const history = useHistory();
 
     //Toggles
     const toggleOpenOnWeekends = () => {
@@ -35,20 +63,40 @@ const FormCreateOrphanage: React.FC = () => {
     }
 
     //Others Functions
-    function setImagesValue(position: number, field: string, value: string) {
-        const updatedImagesValue = images.map((img, index) => {
-            if (position === index)
-                return { ...img, [field]: value };
-            return img;
-        });
-        setImages(updatedImagesValue);
-    }
-
-
-    const createOrphanage = (e: FormEvent) => {
+    const createOrphanage = async (e: FormEvent) => {
         e.preventDefault();
-        console.log(Name.current?.value, openOnWeekends, images)
+        const data = new FormData();
+        data.append('name', Name.current?.value as string);
+        data.append('latitude', String(markerPosition?.lat));
+        data.append('longitude', String(markerPosition?.lng));
+        data.append('about', About.current?.value as string);
+        data.append('instructions', Instructions.current?.value as string);
+        data.append('opening_hours', Opening_in_hours.current?.value as string);
+        data.append('open_on_weekends', String(openOnWeekends));
+        images.forEach(img => data.append('images', img));
+        try {
+            await api.post('/orphanages/create', data);
+            return history.push('/map');
+        } catch (err) {
+            return alert('Falha ao enviar dados');
+        }
+
     }
+
+    const handleMapMarker = (e: LeafletMouseEvent) => {
+        const { lat, lng } = e.latlng;
+        setMarkerPosition({ lat, lng });
+    }
+
+    const handleImages = (e: ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files)
+            return;
+        const selectedImages = Array.from(e.target.files)
+        const selectedImagesPreview = selectedImages.map(img => URL.createObjectURL(img));
+        setImages(selectedImages);
+        setImagesPreview(selectedImagesPreview);
+    }
+
     return (
         <Form
             buttonName="Confirmar"
@@ -57,54 +105,56 @@ const FormCreateOrphanage: React.FC = () => {
             <Fieldset
                 legend="Dados"
             />
-            <MapMarker />
+            <MapMarker
+                clickEvent={handleMapMarker}
+                MarkDown={
+                    <Marker
+                        icon={iconMarker}
+                        position={[markerPosition?.lat || 0, markerPosition?.lng || 0]}
+                        interactive={true}
+                    ></Marker>
+                }
+            />
             <Input
                 ref={Name}
                 label="Nome"
                 type="name"
             />
             <TextArea
+                ref={About}
                 label="Sobre"
                 description="Máximo de 300 catacteres"
             />
             <Input
-                ref={Name}
+                ref={Whatasapp}
                 label="Número do whatsapp"
             />
             <Label htmlFor='images'>Fotos</Label>
             <ImagesContent>
-                {images.map((img, index) => {
-                    return (
-                        <>
-                            {
-                                img.src
-                                &&
-                                <ImgSelected
-                                    key={img.src}
-                                >
-                                    <img
-                                        src={`http://127.0.0.1:8887/${img.src.split('fakepath')[1]}`}
-                                    />
-                                </ImgSelected>
-                            }
-                            <InputImage
-                                key={img.src}
-                                name={'images'}
-                                label="foto"
-                                onChange={e => setImagesValue(index, 'src', e.target.value)}
-                            />
-                        </>
-                    );
-                })
+                {
+                    imagesPreview.map(img => {
+                        return (
+                            <ImgSelected>
+                                <img key={img} src={img} alt={img} />
+                            </ImgSelected>
+                        )
+                    })
                 }
+                <InputImage
+                    name={'images'}
+                    label="foto"
+                    onChange={handleImages}
+                />
             </ImagesContent>
             <Fieldset
                 legend="Visitação"
             />
             <TextArea
+                ref={Instructions}
                 label="Instruçôes"
             />
             <Input
+                ref={Opening_in_hours}
                 label="Horário das visitas"
             />
             <OpenOnweekends>
@@ -124,7 +174,8 @@ const FormCreateOrphanage: React.FC = () => {
                     onChange={toggleOpenOnWeekends}
                 />
             </OpenOnweekends>
-        </Form>
+        </Form >
+
     );
 };
 

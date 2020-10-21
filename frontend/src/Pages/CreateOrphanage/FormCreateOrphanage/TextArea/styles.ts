@@ -30,6 +30,7 @@ export const TextAreaBlock = styled.div`
         border: 1px solid ${props => props.theme.colors.outlineBase};
         background-color: ${props => props.theme.colors.input};
         border-radius: 1rem;
+        resize: vertical;
         color: ${props => shade(0.2, props.theme.colors.primary)};
     }
 

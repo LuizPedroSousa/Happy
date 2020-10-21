@@ -1,4 +1,4 @@
-import { lighten, shade } from 'polished';
+import { lighten } from 'polished';
 import styled from 'styled-components';
 
 import OpenInHoursImg from '../../../../Assets/Images/open_in_hours.svg';

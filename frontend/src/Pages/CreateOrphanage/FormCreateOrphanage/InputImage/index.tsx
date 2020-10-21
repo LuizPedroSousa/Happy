@@ -23,6 +23,7 @@ const InputImage: React.RefForwardingComponent<HTMLInputElement, InputProps> = (
         </span>
       </SelectImg>
       <input
+        multiple
         id={name}
         type="file"
         {...rest}
