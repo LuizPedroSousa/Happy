@@ -13,7 +13,7 @@ export const InputBlock = styled.div`
 
     label{
         font-size: 1.2rem;
-        color: ${props => props.theme.colors.textComplement};
+        color: ${props => props.theme.title === 'light' ? props.theme.colors.textComplement : props.theme.colors.white};
     }
     input{
         width: 100%;

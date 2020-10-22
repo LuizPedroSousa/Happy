@@ -12,7 +12,7 @@ export const Label = styled.label`
     display: flex;
     justify-content: flex-start;
     align-items:center;
-    color: ${props => props.theme.colors.textComplement};
+    color: ${props => props.title === 'light' ? props.theme.colors.textComplement : props.theme.colors.white};
     font-size: 1.2rem;
 `;
 
@@ -48,7 +48,7 @@ export const OpenOnweekends = styled.div`
     align-items:center;
     p{
         margin-right: 1rem;
-        color: ${props => props.theme.colors.textComplement};
+        color: ${props => props.theme.title === 'light' ? props.theme.colors.textComplement : props.theme.colors.white};
         font-size: 1.2rem;
     }
     .react-switch-bg{

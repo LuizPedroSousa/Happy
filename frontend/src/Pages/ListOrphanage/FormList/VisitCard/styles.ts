@@ -4,13 +4,13 @@ import styled from 'styled-components';
 import OpenInHoursImg from '../../../../Assets/Images/open_in_hours.svg';
 
 export const Container = styled.div`
-    padding: 1rem 0 1rem 1rem;
+    padding: 2rem 0 2.5rem 1rem;
     display: flex;
     align-items:flex-start;
-    justify-content:center;
+    justify-content:space-between;
     flex-direction: column;
-    width: 10rem;
-
+    width: 80%;
+    height: 10rem;
     border: 1px solid ${props => props.theme.colors.outlineBase};
     border-radius: .8rem;
     background: url(${OpenInHoursImg}) center;

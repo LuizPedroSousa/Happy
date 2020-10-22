@@ -18,12 +18,12 @@ export const Location = styled.div`
     border-radius: 0 0 1rem 1rem;
     width: 100%;
     padding: 1rem 2rem;
-    background-color: ${props => props.theme.colors.input};
+    background-color: ${props => props.theme.title === 'light' ? props.theme.colors.input : props.theme.colors.background};
     p{
         text-align: center;
         max-width: 13rem;
         font: 700 1rem Nunito;
-        color: ${props => shade(0.2, props.theme.colors.primary)};
+        color: ${props => props.theme.title === 'light' ? shade(0.2, props.theme.colors.primary) : props.theme.colors.white};
     }
 
     @media(min-width: 1120px){

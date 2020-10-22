@@ -4,7 +4,7 @@ import { lighten } from 'polished';
 
 export const Content = styled.form`
     width: 100%;
-    background-color: ${props => props.theme.colors.white};
+    background-color: ${props => props.theme.title === 'light' ? props.theme.colors.white : props.theme.colors.black};
     padding: 4rem 2rem;
     border-radius: 1rem; 
     display: flex;

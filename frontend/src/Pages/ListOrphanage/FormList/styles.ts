@@ -1,12 +1,14 @@
 import styled from 'styled-components';
 
-import backMapImg from '../../../Assets/Images/map_background.svg';
+import backMapLightImg from '../../../Assets/Images/map_background.svg';
+import backMapDarkImg from '../../../Assets/Images/map_background_dark.svg';
 
 export const OphanageBackground = styled.div`
     width: 100%;
     overflow: hidden;
     height: 14rem;
     img{
+        object-fit: contain;
         width: 100%;
         border-radius: 1rem 1rem 0 0;
     }
@@ -26,7 +28,7 @@ export const Content = styled.div`
         p{
             font-size: 1rem;
             margin: 0 0 1rem;
-            color: ${props => props.theme.colors.textComplement};
+            color: ${props => props.theme.title === 'light' ? props.theme.colors.textComplement : props.theme.colors.white};
         }
     }
 
@@ -36,15 +38,15 @@ export const Content = styled.div`
         p{
             font-size: 1rem;
             margin: 0 0 1rem;
-            color: ${props => props.theme.colors.textComplement};
+            color: ${props => props.theme.title === 'light' ? props.theme.colors.textComplement : props.theme.colors.white};
         }
         border: 0;
     }
 
     .locationMap{
-        background: url(${backMapImg}) center;
+        background: url(${props => props.theme.title === 'light' ? backMapLightImg : backMapDarkImg}) center;
         p{
-            color: ${props => props.theme.colors.primaryDark};
+            color: ${props => props.theme.title === 'light' ? props.theme.colors.primaryDark : props.theme.colors.white};
             margin: 0 !important;
         }
     }
@@ -80,8 +82,10 @@ export const ImagesGroup = styled.div`
     width: 100%;
     margin: 0 0 4rem;
     img{
+        background-color: ${props => props.theme.colors.white};
         cursor: pointer;
         transition: .25s;
+        object-fit: contain;
         border-radius: 1rem;
         width: 4rem;
         :hover{
@@ -101,4 +105,11 @@ export const CardsContainer = styled.div`
     align-items:center;
     flex-wrap: wrap;
     gap: 1rem;
+
+    @media(min-width: 1120px){
+        display: grid;
+        align-content:center;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 0;
+    }
 `;

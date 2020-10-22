@@ -14,11 +14,11 @@ export const TextAreaBlock = styled.div`
         strong{
             margin: 0 1rem 0 0;
             font-size:1.1rem; 
-            color: ${props => props.theme.colors.textComplement};
+            color: ${props => props.theme.title === 'light' ? props.theme.colors.textComplement : props.theme.colors.white};
         }
         p{
             font-size:1rem; 
-            color: ${props => lighten(0.2, props.theme.colors.textComplement)};
+            color: ${props => props.theme.title === 'light' ? lighten(0.2, props.theme.colors.textComplement) : shade(0.1, props.theme.colors.white)};
         }
     }
     textarea{

@@ -13,5 +13,5 @@ export const Wrapper = styled.fieldset`
 
 export const Legend = styled.legend`
     margin: 0 0 .5rem;
-    color: ${props => shade(0.2, props.theme.colors.textComplement)};
+    color: ${props => props.theme.title === 'light' ? shade(0.2, props.theme.colors.textComplement) : shade(0.1, props.theme.colors.white)};
 `;

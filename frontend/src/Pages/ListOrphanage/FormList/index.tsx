@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Form from '../../../Components/HTMLElements/Form';
 
 import { FaWhatsapp } from 'react-icons/fa';
@@ -20,16 +20,12 @@ import NoWeekendsCard from './NoWeekendsCard';
 
 
 import { useParams } from 'react-router-dom';
-import markerIcon from '../../../Assets/Images/mark_down_map.svg';
+import markerLightIcon from '../../../Assets/Images/mark_down_map.svg';
+import markerDarkIcon from '../../../Assets/Images/mark_down_map_dark.svg';
 import Leaflet from 'leaflet';
 import api from '../../../Services/api';
+import { ThemeContext } from 'styled-components';
 
-const iconMarker = Leaflet.icon({
-  iconUrl: markerIcon,
-  iconSize: [58, 68],
-  iconAnchor: [29, 68],
-  popupAnchor: [130, 2],
-});
 
 interface OrphanageProps {
   images: Array<{
@@ -49,14 +45,18 @@ interface OrphanageParams {
 }
 
 const FormList: React.FC = () => {
+
+  //Contexts
+  const { title } = useContext(ThemeContext);
+
   //States
   const [orphanages, setOrphanages] = useState<OrphanageProps>();
-  const params = useParams<OrphanageParams>();
-
   const [viewImage, setViewImage] = useState('');
 
+  //Others Hocks
+  const params = useParams<OrphanageParams>();
 
-
+  //Effects
   useEffect(() => {
     api.get(`/orphanages/show/${params.id}`)
       .then(res => {
@@ -67,10 +67,14 @@ const FormList: React.FC = () => {
       });
   }, [params.id]);
 
-  useEffect(() => {
-    console.log(viewImage);
-  }, [viewImage])
 
+  //Utils
+  const iconMarker = Leaflet.icon({
+    iconUrl: title === 'light' ? markerLightIcon : markerDarkIcon,
+    iconSize: [58, 68],
+    iconAnchor: [29, 68],
+    popupAnchor: [130, 2],
+  });
   return (
     <Form
       buttonName="Entrar em contato"
@@ -90,7 +94,7 @@ const FormList: React.FC = () => {
                 key={img.url}
                 src={img.url}
                 alt={img.url}
-                style={viewImage === img.url ? {} : { opacity: '60%' }}
+                style={viewImage === img.url ? {} : { opacity: '20%' }}
                 onClick={() => setViewImage(img.url)}
               />
             )

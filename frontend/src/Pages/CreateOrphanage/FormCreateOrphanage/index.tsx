@@ -21,7 +21,8 @@ import Leaflet, { LeafletMouseEvent } from 'leaflet';
 
 import { useHistory } from 'react-router-dom';
 
-import markerIcon from '../../../Assets/Images/mark_down_map.svg';
+import markerLightIcon from '../../../Assets/Images/mark_down_map.svg';
+import markerDarkIcon from '../../../Assets/Images/mark_down_map_dark.svg';
 import api from '../../../Services/api';
 
 interface PositionProps {
@@ -31,15 +32,9 @@ interface PositionProps {
 
 
 const FormCreateOrphanage: React.FC = () => {
-    const iconMarker = Leaflet.icon({
-        iconUrl: markerIcon,
-        iconSize: [58, 68],
-        iconAnchor: [29, 68],
-        popupAnchor: [130, 2],
-    });
 
     //Contexts
-    const { colors } = useContext(ThemeContext);
+    const { colors, title } = useContext(ThemeContext);
 
     //States
     const [images, setImages] = useState<File[]>([]);
@@ -96,6 +91,14 @@ const FormCreateOrphanage: React.FC = () => {
         setImages(selectedImages);
         setImagesPreview(selectedImagesPreview);
     }
+
+    //Utils
+    const iconMarker = Leaflet.icon({
+        iconUrl: title === 'light' ? markerLightIcon : markerDarkIcon,
+        iconSize: [58, 68],
+        iconAnchor: [29, 68],
+        popupAnchor: [130, 2],
+    });
 
     return (
         <Form

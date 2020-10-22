@@ -17,17 +17,10 @@ import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 
 import 'leaflet/dist/leaflet.css'
 
-import markerIcon from '../../Assets/Images/mark_down_map.svg';
-
+import markerLightIcon from '../../Assets/Images/mark_down_map.svg';
+import markerDarkIcon from '../../Assets/Images/mark_down_map_dark.svg';
 import Leaflet from 'leaflet';
 import api from '../../Services/api';
-
-const iconMarker = Leaflet.icon({
-  iconUrl: markerIcon,
-  iconSize: [58, 68],
-  iconAnchor: [29, 68],
-  popupAnchor: [130, 2],
-});
 
 interface Orphanages {
   id: number,
@@ -53,6 +46,14 @@ const OrphanagesMap: React.FC = () => {
       setOrphanages([...res.data.Orphanages]);
     });
   }, []);
+
+  //Utils
+  const iconMarker = Leaflet.icon({
+    iconUrl: title === 'light' ? markerLightIcon : markerDarkIcon,
+    iconSize: [58, 68],
+    iconAnchor: [29, 68],
+    popupAnchor: [130, 2],
+  });
   return (
     <Container>
       <Aside />

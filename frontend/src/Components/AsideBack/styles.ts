@@ -20,7 +20,7 @@ export const Footer = styled.footer`
         display: flex;
         align-items:center;
         justify-content:center;
-        background-color: ${props => props.theme.colors.primaryDark};
+        background-color: ${props => props.theme.title === 'light' ? props.theme.colors.primaryDark : props.theme.colors.black};
         border: 0;
         outline: 0;
         border-radius: 1rem;
@@ -35,7 +35,10 @@ export const Footer = styled.footer`
         }
 
         :hover{
-            background-color: ${props => lighten(0.2, props.theme.colors.primaryDark)};
+            background-color: ${props => props.theme.title === 'light' ? lighten(0.2, props.theme.colors.primaryDark) : props.theme.colors.white};
+            span{
+                color: ${props => props.theme.title === 'dark' && props.theme.colors.black};
+            }
         }
     }
 `;

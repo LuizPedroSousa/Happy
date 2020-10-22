@@ -16,6 +16,7 @@ export const Container = styled.div`
         border-radius: .8rem;
         background-color: ${props => props.theme.colors.white};
         box-shadow: none;
+        transition: .25s;
     }
 
     .popupMark .leaflet-popup-content{
@@ -42,7 +43,13 @@ export const Container = styled.div`
                 font-size: 1.8rem;
             }
             :hover{
-                background-color: ${props => shade(0.2, props.theme.colors.primary)};
+                .popupMark .leaflet-popup-content-wrapper{
+                    background-color: #333 !important;
+                }
+                span{
+                    color: ${props => props.theme.title === 'dark' && props.theme.colors.black};
+                }
+                background-color: ${props => props.theme.title === 'light' ? shade(0.2, props.theme.colors.primary) : props.theme.colors.white};
             }
         }
     }
@@ -52,7 +59,7 @@ export const Container = styled.div`
     }
 
     .create-orp{
-        background-color: ${props => props.theme.colors.primary};
+        background-color: ${props => props.theme.title === 'light' ? props.theme.colors.primary : shade(0.2, props.theme.colors.black)};
         transition: .25s;
         height: 4rem;
         width: 4rem;
@@ -73,9 +80,9 @@ export const Container = styled.div`
         }
         :hover{
             span{
-                color: ${props => shade(0.6, props.theme.colors.white)};
+                color: ${props => props.theme.title === 'light' ? shade(0.6, props.theme.colors.white) : props.theme.colors.black};
             }
-            background-color: ${props => lighten(0.2, props.theme.colors.primary)};
+            background-color: ${props => props.theme.title === 'light' ? lighten(0.2, props.theme.colors.primary) : props.theme.colors.white};
         }
     }
 

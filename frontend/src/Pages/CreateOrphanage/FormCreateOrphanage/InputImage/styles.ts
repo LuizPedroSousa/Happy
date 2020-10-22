@@ -20,11 +20,11 @@ export const SelectImg = styled.label`
         transition: .25s;
         justify-content:center;
         border-radius: .8rem; 
-        border: 2px dashed ${props => props.theme.colors.primary};
+        border: 2px dashed ${props => props.theme.title === 'light' ? props.theme.colors.primary : props.theme.colors.white};
         align-items:center;
         span{
             transition: .25s;
-            color: ${props => props.theme.colors.primary};
+            color: ${props => props.theme.title === 'light' ? props.theme.colors.primary : props.theme.colors.white};
             display:flex;
             justify-content:center;
             align-items:center;
@@ -35,6 +35,6 @@ export const SelectImg = styled.label`
                 padding: 0 0 .25rem;
                 font-size: 2.5rem;
             }
-            border: 2px dashed ${props => shade(0.3, props.theme.colors.primary)};
+            border: 2px dashed ${props => props.theme.title === 'light' ? shade(0.3, props.theme.colors.primary) : props.theme.colors.alert};
         }
 `;
