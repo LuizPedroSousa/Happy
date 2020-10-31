@@ -1,19 +1,34 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import CreateOrphanage from './Pages/CreateOrphanage';
 import OrphanageMap from './Pages/OrphanageMap';
+import OrphanageMarker from './Pages/CreateOrphanage/OrphanageMarker';
+import OrphanageData from './Pages/CreateOrphanage/OrphanageData';
+
+
+
+
 const Routers: React.FC = () => {
     const { Navigator, Screen } = createStackNavigator();
+
     return (
         <NavigationContainer>
             <Navigator>
                 <Screen
-                    name="OrphanageMap"
+                    name='OrphanageMap'
                     options={{ headerShown: false }}
                     component={OrphanageMap}
                 />
-                <Screen name="Adicione" component={CreateOrphanage} />
+                <Screen
+                    name='CreateOrphanage/marker'
+                    options={{ headerShown: false }}
+                    component={OrphanageMarker}
+                />
+                <Screen
+                    name='CreateOrphanage/data'
+                    options={{ headerShown: false }}
+                    component={OrphanageData}
+                />
             </Navigator>
         </NavigationContainer>
     );

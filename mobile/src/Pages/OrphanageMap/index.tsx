@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Animated } from 'react-native';
 import {
   Wrapper,
@@ -14,34 +14,40 @@ import {
   AntDesign
 } from '@expo/vector-icons'
 
-import MapView, {
-  PROVIDER_GOOGLE,
+import {
   Marker,
   Callout
 } from 'react-native-maps';
 
+import Map from '../../Components/Map';
+
 import markerLightIcon from '../../Assets/Images/mark_down_map.png';
 import { ThemeContext } from 'styled-components';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { api } from '../../Services/api';
+
+interface Orphanage {
+  id: number;
+  latitude: string;
+  longitude: string;
+  name: string;
+}
 
 const OrphanageMap: React.FC = () => {
+  const navigation = useNavigation();
+
+  //States
+  const [orphanage, setOrphanage] = useState<Orphanage[]>([]);
+
   //Refs
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   //Contexts
   const { colors } = useContext(ThemeContext);
 
-  //InlineStyles
-  const mapStyle = {
-    width: '100%',
-    height: '100%',
-  }
-
-  //Utils
-  const initialRegion = {
-    latitude: -23.457960,
-    longitude: -46.682786,
-    latitudeDelta: 0.005,
-    longitudeDelta: 0.005,
+  //Others
+  const handlePushNavigation = () => {
+    navigation.navigate('CreateOrphanage/marker');
   }
 
   //Animations
@@ -51,50 +57,60 @@ const OrphanageMap: React.FC = () => {
     useNativeDriver: true,
   }).start();
 
+
+  useFocusEffect(() => {
+    api.get('/orphanages').then(res => {
+      setOrphanage(res.data.Orphanages);
+    })
+  });
+
   return (
     <Wrapper>
-      <MapView
-        provider={PROVIDER_GOOGLE}
-        initialRegion={{ ...initialRegion }}
-        style={{ ...mapStyle }}
-      >
-        <Marker
-          icon={markerLightIcon}
-          coordinate={{
-            latitude: -23.457960,
-            longitude: -46.682786,
-          }}
-          calloutAnchor={{
-            x: .5,
-            y: -.1,
-          }}
-        >
-          <Callout
-            style={{ width: 200, height: 60 }}
-            tooltip={true}
-          >
-            <Popup>
-              <MarkerName>
-                Orf. Jardim Eliza
-              </MarkerName>
-              <Arrow
-                as={Animated.View}
+      <Map>
+        {orphanage.map(orp => {
+          return (
+            <Marker
+              key={orp.id}
+              icon={markerLightIcon}
+              coordinate={{
+                latitude: parseFloat(orp.latitude),
+                longitude: parseFloat(orp.longitude),
+              }}
+              calloutAnchor={{
+                x: .5,
+                y: -.1,
+              }}
+            >
+              <Callout
+                style={{ width: 200, height: 60 }}
+                tooltip={true}
               >
-                <AntDesign
-                  name="arrowright"
-                  size={12}
-                  color={colors.white}
-                />
-              </Arrow>
-            </Popup>
-          </Callout>
-        </Marker>
-      </MapView>
+                <Popup>
+                  <MarkerName>
+                    {orp.name}
+                  </MarkerName>
+                  <Arrow
+                    as={Animated.View}
+                  >
+                    <AntDesign
+                      name="arrowright"
+                      size={12}
+                      color={colors.white}
+                    />
+                  </Arrow>
+                </Popup>
+              </Callout>
+            </Marker>
+          );
+        })}
+      </Map>
       <Footer>
         <Title>
-          2 Orfanatos encontrados
+          {orphanage.length} Orfanatos encontrados
         </Title>
-        <Create>
+        <Create
+          onPress={handlePushNavigation}
+        >
           <AntDesign
             name="plus"
             size={22}
@@ -102,7 +118,7 @@ const OrphanageMap: React.FC = () => {
           />
         </Create>
       </Footer>
-    </Wrapper>
+    </Wrapper >
   );
 };
 

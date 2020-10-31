@@ -73,7 +73,6 @@ export const Create = styled(RectButton)`
     justify-content:center;
     align-items: center;
     border-radius: 20px;
-    elevation: 3;
 `;
 
 export const Title = styled.Text`

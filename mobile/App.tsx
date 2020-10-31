@@ -9,7 +9,7 @@ import {
   Nunito_700Bold,
   Nunito_800ExtraBold,
 } from '@expo-google-fonts/nunito';
-import AppLoading from 'expo/build/launch/AppLoading';
+import { AppLoading } from 'expo';
 import ThemeColorsContext from './src/Store/ContextApi/themes/context';
 import ThemeColorsProvider from './src/Store/ContextApi/themes/provider';
 import { ThemeProvider } from 'styled-components';
