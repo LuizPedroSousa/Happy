@@ -16,15 +16,18 @@ import { useNavigation } from '@react-navigation/native';
 
 interface HeaderProps {
   title: string;
-  exit: boolean;
+  exit?: boolean;
 }
 
 const HeaderNavigation: React.FC<HeaderProps> = ({ title, exit }) => {
   const navigation = useNavigation();
   const { colors } = useContext(ThemeContext);
   return (
-    <Wrapper>
+    <Wrapper
+      style={!exit && { justifyContent: 'flex-start' }}
+    >
       <PushBack
+        style={!exit && { marginRight: '20%' }}
         onPress={() => navigation.goBack()}
       >
         <AntDesign
@@ -40,6 +43,7 @@ const HeaderNavigation: React.FC<HeaderProps> = ({ title, exit }) => {
         <ExitPage
           onPress={() => navigation.navigate('OrphanageMap')}
         >
+
           <Feather
             name='x'
             size={25}

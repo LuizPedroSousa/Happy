@@ -46,8 +46,8 @@ const OrphanageMap: React.FC = () => {
   const { colors } = useContext(ThemeContext);
 
   //Others
-  const handlePushNavigation = () => {
-    navigation.navigate('CreateOrphanage/marker');
+  const handlePushNavigation = (url: string, id?: number) => {
+    navigation.navigate(url, { id });
   }
 
   //Animations
@@ -83,6 +83,7 @@ const OrphanageMap: React.FC = () => {
             >
               <Callout
                 style={{ width: 200, height: 60 }}
+                onPress={() => handlePushNavigation(`ListOrphanage`, orp.id)}
                 tooltip={true}
               >
                 <Popup>
@@ -109,7 +110,7 @@ const OrphanageMap: React.FC = () => {
           {orphanage.length} Orfanatos encontrados
         </Title>
         <Create
-          onPress={handlePushNavigation}
+          onPress={() => handlePushNavigation('CreateOrphanage/marker')}
         >
           <AntDesign
             name="plus"
