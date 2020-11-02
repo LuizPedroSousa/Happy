@@ -1,3 +1,4 @@
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import { RectButton } from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
@@ -32,4 +33,10 @@ export const Title = styled.Text`
     color: ${props => props.theme.colors.white};
     font-size: 18px;
     font-family: ExtraBold;
+`;
+
+
+export const ShimmerContent = styled(ShimmerPlaceholder)`
+    width: 100%;
+    height: 200px;
 `;

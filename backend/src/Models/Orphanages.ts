@@ -16,7 +16,10 @@ export default class Orphanage {
     name: string;
 
     @Column()
-    about: number;
+    about: string;
+
+    @Column()
+    whatsapp: string;
 
     @Column()
     instructions: string;
@@ -31,6 +34,6 @@ export default class Orphanage {
     @OneToMany(() => Image, Image => Image.orphanage, {
         cascade: ['insert', 'update']
     })
-    @JoinColumn({name: 'orphanage_id'})
+    @JoinColumn({ name: 'orphanage_id' })
     images: Image[];
 }

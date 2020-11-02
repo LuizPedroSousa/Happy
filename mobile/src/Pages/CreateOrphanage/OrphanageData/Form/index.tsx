@@ -62,6 +62,7 @@ const Form: React.FC = () => {
     data.append('latitude', String(position.latitude));
     data.append('longitude', String(position.longitude));
     data.append('about', about);
+    data.append('whatsapp', whatsapp);
     data.append('instructions', instructions);
     data.append('opening_hours', openingHours);
     data.append('open_on_weekends', String(openOnWeekends));

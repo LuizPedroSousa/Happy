@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useRoute } from '@react-navigation/native';
-import { View, Text } from 'react-native';
+import { Linking } from 'react-native';
 import Legend from '../../../Components/Legend';
 import { api } from '../../../Services/api';
 import ImagesCarousel from './ImagesCarousel';
@@ -16,12 +16,14 @@ import {
   Title,
 } from './styles';
 import { ThemeContext } from 'styled-components';
-import { shade } from 'polished';
 import VisitCard from './VisitCard';
+import ShimmerEffect from './ShimmerEffect';
+
 
 interface IOrphanage {
   name: string;
   about: string;
+  whatsapp: string;
   opening_hours: string;
   instructions: string;
   open_on_weekends: boolean;
@@ -42,7 +44,10 @@ const Orphanage: React.FC = () => {
   const route = useRoute();
   const params = route.params as IParams;
 
-  console.log(orphanage);
+  //Toggles
+  const handleContactInWhatsapp = () => {
+    Linking.openURL(`https://wa.me/55${orphanage?.whatsapp}/?text=Olá%20gostária%20de%20visistar%20as%20crianças%20seu%20orfanato`)
+  }
 
   useEffect(() => {
     const { id } = params;
@@ -52,11 +57,7 @@ const Orphanage: React.FC = () => {
       });
   }, [params]);
   if (!orphanage)
-    return (
-      <View>
-        <Text>Carregando dados...</Text>
-      </View>
-    );
+    return <ShimmerEffect />
   return (
     <Container>
       <ImagesCarousel />
@@ -78,7 +79,9 @@ const Orphanage: React.FC = () => {
             title={orphanage.opening_hours}
             openOnWeeekends={orphanage.open_on_weekends}
           />
-          <Contact>
+          <Contact
+            onPress={handleContactInWhatsapp}
+          >
             <FontAwesome
               name='whatsapp'
               size={30}

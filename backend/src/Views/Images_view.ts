@@ -4,7 +4,7 @@ export default {
     Render(image: Image){
         return {
             id: image.id,
-            url: `http://localhost:${process.env.PORT || 3333}/Uploads/${image.path}`
+            url: `http://192.168.15.10:${process.env.PORT || 3333}/Uploads/${image.path}`
         }
     },
 
