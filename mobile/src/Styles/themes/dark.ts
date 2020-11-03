@@ -10,5 +10,11 @@ export const dark = {
         textComplementDark: '#5C8599',
         alert: '#FF669D',
         buttonPrimary: '#39CC83',
+        onBoardingBackground: '#F7F9FC',
+        onBoardingTitle: '#0089A5',
+        onBoardingSubTitle: '#5C8599',
+        onBoardingNextButton: '#D1EDF2',
+        onBoardingDotLight: '#FFD152',
+        onBoardingDotSelected: '#BECFD8',
     }
 }

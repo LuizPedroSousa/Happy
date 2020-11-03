@@ -5,4 +5,5 @@ export const initialRegion: Region = {
     longitude: -46.682786,
     latitudeDelta: 0.005,
     longitudeDelta: 0.005,
+    
 }

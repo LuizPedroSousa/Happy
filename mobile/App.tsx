@@ -2,6 +2,7 @@ import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import Routers from './src/Routers';
 
+
 import {
   useFonts,
   Nunito_400Regular,
@@ -14,6 +15,7 @@ import ThemeColorsContext from './src/Store/ContextApi/themes/context';
 import ThemeColorsProvider from './src/Store/ContextApi/themes/provider';
 import { ThemeProvider } from 'styled-components';
 
+
 export default function App() {
   const [fontsLoaded] = useFonts({
     Regular: Nunito_400Regular,
@@ -24,19 +26,18 @@ export default function App() {
 
   if (!fontsLoaded)
     return <AppLoading />
-  else
-    return (
-      <ThemeColorsProvider>
-        <ThemeColorsContext.Consumer>
-          {theme =>
-            <ThemeProvider
-              theme={theme.theme}
-            >
-              <Routers />
-              <StatusBar style={theme.theme.title === 'light' ? 'dark' : 'light'} />
-            </ThemeProvider>
-          }
-        </ThemeColorsContext.Consumer>
-      </ThemeColorsProvider>
-    );
+  return (
+    <ThemeColorsProvider>
+      <ThemeColorsContext.Consumer>
+        {theme =>
+          <ThemeProvider
+            theme={theme.theme}
+          >
+            <Routers />
+            <StatusBar style={theme.theme.title === 'light' ? 'dark' : 'light'} />
+          </ThemeProvider>
+        }
+      </ThemeColorsContext.Consumer>
+    </ThemeColorsProvider>
+  );
 }

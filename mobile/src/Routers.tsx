@@ -1,17 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import OrphanageMap from './Pages/OrphanageMap';
 import OrphanageMarker from './Pages/CreateOrphanage/OrphanageMarker';
 import OrphanageData from './Pages/CreateOrphanage/OrphanageData';
 import ListOrphanage from './Pages/ListOrphanage';
+import OnBoarding from './Pages/OnBoarding';
+import { AsyncStorage } from 'react-native';
+import { View, Text } from 'react-native';
+
 
 const Routers: React.FC = () => {
     const { Navigator, Screen } = createStackNavigator();
+    const [hasOnBoarded, setHasOnBoarded] = useState('');
+
+    useEffect(() => {
+        AsyncStorage.getItem('onBoarding').then(value => {
+            setHasOnBoarded(value ? value : 'false');
+        });
+    }, []);
 
     return (
         <NavigationContainer>
-            <Navigator>
+            <Navigator
+                initialRouteName={hasOnBoarded === 'false' ? 'OnBoarding' : 'OrphanageMap'}
+            >
+                <Screen
+                    name='OnBoarding'
+                    options={{ headerShown: false }}
+                    component={OnBoarding}
+                />
                 <Screen
                     name='OrphanageMap'
                     options={{ headerShown: false }}
@@ -33,7 +51,7 @@ const Routers: React.FC = () => {
                     component={OrphanageData}
                 />
             </Navigator>
-        </NavigationContainer>
+        </NavigationContainer >
     );
 }
 

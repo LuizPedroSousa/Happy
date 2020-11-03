@@ -12,6 +12,12 @@ declare module 'styled-components' {
             textComplementDark: string,
             alert: string,
             buttonPrimary: string,
+            onBoardingBackground: string,
+            onBoardingTitle: string,
+            onBoardingSubTitle: string,
+            onBoardingNextButton: string,
+            onBoardingDotLight: string,
+            onBoardingDotSelected: string,
         }
     }
 }
