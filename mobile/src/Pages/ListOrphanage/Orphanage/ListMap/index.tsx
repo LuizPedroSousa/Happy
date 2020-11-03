@@ -60,9 +60,6 @@ const ListMap: React.FC = () => {
     longitudeDelta: 0.005,
   }
 
-  console.log(parseFloat(orphanage.latitude), parseFloat(orphanage.longitude));
-
-
   return (
     <Container>
       <MapContent>

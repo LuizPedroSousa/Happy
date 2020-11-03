@@ -1,7 +1,8 @@
-import React from 'react';
-import { StatusBar } from 'expo-status-bar';
+import React, { useEffect } from 'react';
+import { setStatusBarStyle, StatusBar } from 'expo-status-bar';
 import Routers from './src/Routers';
 
+import * as SplashScreen from 'expo-splash-screen';
 
 import {
   useFonts,
@@ -14,7 +15,6 @@ import { AppLoading } from 'expo';
 import ThemeColorsContext from './src/Store/ContextApi/themes/context';
 import ThemeColorsProvider from './src/Store/ContextApi/themes/provider';
 import { ThemeProvider } from 'styled-components';
-
 
 export default function App() {
   const [fontsLoaded] = useFonts({
