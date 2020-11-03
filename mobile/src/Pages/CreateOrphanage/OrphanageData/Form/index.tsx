@@ -76,8 +76,7 @@ const Form: React.FC = () => {
 
     try {
       await api.post('orphanages/create', data);
-      alert('Orfanato criado com sucesso');
-      return navigation.navigate('OrphanageMap');
+      return navigation.navigate('CreateOrphanage/Registered');
     } catch (err) {
       return alert(`Falha ao criar orfanato${err}`);
     }

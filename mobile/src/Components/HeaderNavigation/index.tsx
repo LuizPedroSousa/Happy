@@ -22,6 +22,11 @@ interface HeaderProps {
 const HeaderNavigation: React.FC<HeaderProps> = ({ title, exit }) => {
   const navigation = useNavigation();
   const { colors } = useContext(ThemeContext);
+
+  const handleExitNavigation = () => {
+    navigation.navigate('CreateOrphanage/Cancel');
+  }
+
   return (
     <Wrapper
       style={!exit && { justifyContent: 'flex-start' }}
@@ -41,13 +46,13 @@ const HeaderNavigation: React.FC<HeaderProps> = ({ title, exit }) => {
       </Title>
       {exit &&
         <ExitPage
-          onPress={() => navigation.navigate('OrphanageMap')}
+          onPress={handleExitNavigation}
         >
 
           <Feather
             name='x'
             size={25}
-            color={colors.textComplement}
+            color={colors.alert}
           />
         </ExitPage>
       }
