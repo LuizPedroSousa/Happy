@@ -44,11 +44,12 @@ const Orphanage: React.FC = () => {
   const route = useRoute();
   const params = route.params as IParams;
 
-  //Toggles
+  //Handles
   const handleContactInWhatsapp = () => {
     Linking.openURL(`https://wa.me/55${orphanage?.whatsapp}/?text=Olá%20gostária%20de%20visistar%20as%20crianças%20seu%20orfanato`)
   }
 
+  //Effects
   useEffect(() => {
     const { id } = params;
     api.get(`orphanages/show/${id}`)
@@ -56,6 +57,7 @@ const Orphanage: React.FC = () => {
         setOrphanage(res.data.orphanage);
       });
   }, [params]);
+
   if (!orphanage)
     return <ShimmerEffect />
   return (

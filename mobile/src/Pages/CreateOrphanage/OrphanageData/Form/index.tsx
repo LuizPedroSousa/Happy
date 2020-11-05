@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
-import Input from './Input';
+import Input from '../../../../Components/Input';
 import Legend from '../../../../Components/Legend';
-import TextArea from './TextArea';
+import TextArea from '../../../../Components/TextArea';
 
 import { Content } from './styles';
-import OpenOnWeekends from './OpenOnWeekends';
 import { ThemeContext } from 'styled-components';
 import NextPage from '../../../../Components/NextPage';
 import { StyleProp, ViewStyle, TextStyle, Platform } from 'react-native';
@@ -12,7 +11,6 @@ import InputImagePicker from './ImagePicker';
 import * as ImagePicker from 'expo-image-picker';
 import OrphanageImage from './OrphanageImage';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { api } from '../../../../Services/api';
 
 interface OrphanageParams {
   position: {
@@ -33,17 +31,10 @@ const Form: React.FC = () => {
   //States
   const [requiredFields, setRequiredFiels] = useState(false);
   const [images, setImages] = useState<string[]>([]);
-  const [openOnWeekends, setOpenOnWeekends] = useState(false);
   const [name, setName] = useState('');
   const [about, setAbout] = useState('');
-  const [openingHours, setOpeningHours] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
-  const [instructions, setInstructions] = useState('');
 
-  //Toggles
-  const toggleOpenOnWeekends = () => {
-    setOpenOnWeekends(!openOnWeekends ? true : false);
-  }
   const handleImagePicker = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -55,31 +46,15 @@ const Form: React.FC = () => {
     if (!result.cancelled)
       setImages([...images, result.uri])
   }
-  const handleCreateOrphanage = async () => {
+  const handleNextStep = async () => {
     const { position } = params;
-    const data = new FormData;
-    data.append('name', name);
-    data.append('latitude', String(position.latitude));
-    data.append('longitude', String(position.longitude));
-    data.append('about', about);
-    data.append('whatsapp', whatsapp);
-    data.append('instructions', instructions);
-    data.append('opening_hours', openingHours);
-    data.append('open_on_weekends', String(openOnWeekends));
-    images.forEach((img, index) => {
-      data.append('images', {
-        name: `image_${index}.png`,
-        type: 'image/png',
-        uri: img,
-      } as any)
+    requiredFields && navigation.navigate('CreateOrphanage/Visit', {
+      position,
+      name,
+      about,
+      whatsapp,
+      images,
     })
-
-    try {
-      await api.post('orphanages/create', data);
-      return navigation.navigate('CreateOrphanage/Registered');
-    } catch (err) {
-      return alert(`Falha ao criar orfanato${err}`);
-    }
   }
 
   //InlineStyles
@@ -96,25 +71,16 @@ const Form: React.FC = () => {
   }
   const nameStyle: StyleProp<TextStyle> = [
     name.length >= 1 && { borderColor: colors.alert },
-    name.length >= 5 && { borderColor: colors.buttonPrimary },
+    name.length >= 3 && { borderColor: colors.buttonPrimary },
   ]
   const aboutStyle: StyleProp<TextStyle> = [
     about.length >= 1 && { borderColor: colors.alert },
-    about.length >= 5 && { borderColor: colors.buttonPrimary },
-  ]
-  const instructionsStyle: StyleProp<TextStyle> = [
-    instructions.length >= 1 && { borderColor: colors.alert },
-    instructions.length >= 5 && { borderColor: colors.buttonPrimary },
-  ]
-  const openingHoursStyle: StyleProp<TextStyle> = [
-    openingHours.length >= 1 && { borderColor: colors.alert },
-    openingHours.length >= 5 && { borderColor: colors.buttonPrimary },
+    about.length >= 3 && { borderColor: colors.buttonPrimary },
   ]
   const whatsappStyle: StyleProp<TextStyle> = [
     whatsapp.length >= 1 && { borderColor: colors.alert },
-    whatsapp.length >= 5 && { borderColor: colors.buttonPrimary },
+    whatsapp.length >= 3 && { borderColor: colors.buttonPrimary },
   ]
-
   //Effects
   useEffect(() => {
     (async () => {
@@ -127,16 +93,17 @@ const Form: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (name && about && whatsapp && openingHours && instructions !== '')
+    if (name && about && whatsapp !== '')
       setRequiredFiels(true);
     else
       setRequiredFiels(false);
-  }, [name, about, whatsapp, openingHours, instructions])
+  }, [name, about, whatsapp])
 
   return (
     <Content>
       <Legend
         title='Dados'
+        index={1}
       />
       <Input
         label='Nome'
@@ -168,28 +135,8 @@ const Form: React.FC = () => {
         label='Fotos'
         pressEvent={handleImagePicker}
       />
-      <Legend
-        title='Visitação'
-      />
-      <TextArea
-        label='Instruçôes'
-        onChangeText={text => setInstructions(text)}
-        TextAreaStyle={instructionsStyle}
-
-      />
-      <Input
-        label='Horário de visitas'
-        onChangeText={text => setOpeningHours(text)}
-        InputStyle={openingHoursStyle}
-      />
-      <OpenOnWeekends
-        thumbColor={openOnWeekends ? colors.white : colors.textComplement}
-        value={openOnWeekends}
-        onValueChange={toggleOpenOnWeekends}
-      />
       <NextPage
-        title={'Confirmar'}
-        onPress={handleCreateOrphanage}
+        onPress={handleNextStep}
         style={{ ...buttonStyle }}
       />
     </Content>

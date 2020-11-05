@@ -7,7 +7,7 @@ export const InputBlock = styled.View`
 `;
 
 export const Titles = styled.View`
-    margin: 12px 0 8px;
+    margin: 8px 0 8px;
     flex-direction: row;
     align-items:center;
     justify-content: space-between;
@@ -15,8 +15,8 @@ export const Titles = styled.View`
 
 export const Label = styled.Text`
     color: ${props => props.theme.colors.textComplement};
-    font-size: 18px;
-    font-family: Bold; 
+    font-size: 15px;
+    font-family: SemiBold; 
 `;
 
 export const Description = styled(Label)`
@@ -28,7 +28,7 @@ export const InputContent = styled(TextInput)`
     width: 100%;
     text-transform: capitalize;
     padding: 14px;
-    height: 60px;
+    height: 56px;
     font-size: 18px;
     font-family: SemiBold;
     color: ${props => props.theme.colors.textComplement};

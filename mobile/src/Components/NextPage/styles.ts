@@ -6,7 +6,7 @@ export const NextPageButton = styled(RectButton)`
     bottom: 25px;
     width: 80%;
     background-color: ${props => props.theme.colors.primary};
-    height: 50px;
+    height: 56px;
     justify-content:center;
     align-items:center;
     right: 38px;

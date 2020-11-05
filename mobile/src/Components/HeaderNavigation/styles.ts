@@ -14,7 +14,7 @@ export const Wrapper = styled.View`
     align-items:center;
     width: 100%;
     height: 90px;
-    border-color: ${props => lighten(0.3, props.theme.colors.textComplement)};
+    border-color: ${props => lighten(0.25, props.theme.colors.textComplement)};
     border-width: 1px;
     padding: ${StatusBarHeight + 'px'} 16px 0;
     background-color: ${props => props.theme.colors.white};

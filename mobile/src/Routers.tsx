@@ -9,6 +9,7 @@ import OnBoarding from './Pages/OnBoarding';
 import { AsyncStorage } from 'react-native';
 import OrphanageRegistered from './Pages/CreateOrphanage/OrphanageRegistered';
 import OrphanageCancel from './Pages/CreateOrphanage/OrphanageCancel';
+import OrphanageVisit from './Pages/CreateOrphanage/OrphanageVisit';
 
 const Routers: React.FC = () => {
     const { Navigator, Screen } = createStackNavigator();
@@ -46,6 +47,16 @@ const Routers: React.FC = () => {
                     component={OrphanageMarker}
                 />
                 <Screen
+                    name='CreateOrphanage/data'
+                    options={{ headerShown: false }}
+                    component={OrphanageData}
+                />
+                <Screen
+                    name='CreateOrphanage/Visit'
+                    options={{ headerShown: false }}
+                    component={OrphanageVisit}
+                />
+                <Screen
                     name='CreateOrphanage/Registered'
                     options={{ headerShown: false }}
                     component={OrphanageRegistered}
@@ -54,11 +65,6 @@ const Routers: React.FC = () => {
                     name='CreateOrphanage/Cancel'
                     options={{ headerShown: false }}
                     component={OrphanageCancel}
-                />
-                <Screen
-                    name='CreateOrphanage/data'
-                    options={{ headerShown: false }}
-                    component={OrphanageData}
                 />
             </Navigator>
         </NavigationContainer >

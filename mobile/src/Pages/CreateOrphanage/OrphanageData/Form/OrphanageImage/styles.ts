@@ -1,15 +1,18 @@
 import { lighten } from 'polished';
-import { BorderlessButton, RectButton } from 'react-native-gesture-handler';
+import { RectButton } from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 export const ImageBlock = styled.ImageBackground`
     width: 100%;
     height: 60px;
-    border-radius: 100px;
+    border-radius:20px;
     align-items:center;
     padding: 4px;
     flex-direction: row;
     justify-content: space-between;
     margin: 14px 0;
+    border-color: ${props => props.theme.colors.buttonPrimary};
+    border-width: 1px;
+    overflow: hidden;
     background-color: ${props => lighten(0.2, props.theme.colors.buttonPrimary)};
 `;
 

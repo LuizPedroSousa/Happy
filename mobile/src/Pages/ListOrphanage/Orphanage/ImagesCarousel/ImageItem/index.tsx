@@ -1,5 +1,4 @@
 import React from 'react';
-import { Dimensions, Text } from 'react-native';
 
 import {
   Image,
@@ -15,9 +14,12 @@ interface IItem {
 const ImageItem: React.FC<IItem> = ({ item, index }) => {
 
   return (
-    <Image resizeMode={"stretch"} source={{ uri: item.url }} >
-
-    </Image>
+    <>
+      <Image
+        resizeMode={"stretch"}
+        source={{ uri: item.url }}
+      />
+    </>
   );
 };
 

@@ -69,7 +69,7 @@ export const Create = styled(RectButton)`
     height: 56px;
     width: 56px;
     position: absolute;
-    right: 0;
+    right: -2px;
     justify-content:center;
     align-items: center;
     border-radius: 20px;

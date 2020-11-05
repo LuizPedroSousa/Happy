@@ -22,9 +22,6 @@ const OrphanageRegistered: React.FC = () => {
     navigation.navigate('OrphanageMap');
   }
 
-  useEffect(() => {
-    setStatusBarStyle('light');
-  }, [])
 
   const HeroAnim = Animatable.createAnimatableComponent(Hero);
   const TitleAnim = Animatable.createAnimatableComponent(Title);

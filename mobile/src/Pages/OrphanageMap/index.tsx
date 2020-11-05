@@ -25,6 +25,7 @@ import markerLightIcon from '../../Assets/Images/mark_down_map.png';
 import { ThemeContext } from 'styled-components';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { api } from '../../Services/api';
+import { setStatusBarStyle } from 'expo-status-bar';
 
 interface Orphanage {
   id: number;
@@ -58,6 +59,7 @@ const OrphanageMap: React.FC = () => {
   }).start();
 
 
+  
   useFocusEffect(() => {
     api.get('/orphanages').then(res => {
       setOrphanage(res.data.Orphanages);

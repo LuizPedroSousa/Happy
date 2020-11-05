@@ -41,12 +41,18 @@ export const ButtonsContainer = styled.View`
     justify-content: space-between;
 `;
 
-export const DontCancel = styled.TouchableOpacity`
-    border-radius: 20px;
-    border-color: ${props => shade(0.2, props.theme.colors.alert)};
-    border-width: 2px;
+export const ButtonBorder = styled.View`
     width: 48%;
     height: 56px;
+    border-radius: 20px;
+    border-width: 2px;
+    border-color: ${props => shade(0.2, props.theme.colors.alert)};
+    overflow: hidden;
+`;
+
+export const DontCancel = styled(RectButton)`
+    width: 100%;
+    height: 100%;
     justify-content: center;
     align-items:center;
 `;

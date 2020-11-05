@@ -5,10 +5,11 @@ import {
   Span,
   Title,
   Description,
+  ButtonsContainer,
+  ButtonBorder,
   DontCancel,
   ButtonText,
   Cancel,
-  ButtonsContainer,
 } from './styles';
 
 import { Feather } from '@expo/vector-icons';
@@ -60,11 +61,13 @@ const OrphanageCancel: React.FC = () => {
         cancelar esse cadastro?
       </DescriptionAnim>
       <ButtonsContainer>
-        <DontCancel
-          onPress={handleExitNavigation}
-        >
-          <ButtonText>Não</ButtonText>
-        </DontCancel>
+        <ButtonBorder>
+          <DontCancel
+            onPress={handleExitNavigation}
+          >
+            <ButtonText>Não</ButtonText>
+          </DontCancel>
+        </ButtonBorder>
         <Cancel
           onPress={handleNavigate}
         >

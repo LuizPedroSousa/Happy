@@ -14,7 +14,7 @@ const TextArea: React.FC<TextAreaProps> = ({ label, TextAreaStyle, description, 
       <Input
         label={label}
         BlockStyle={{ padding: 0 }}
-        InputStyle={[TextAreaStyle, { height: 120, padding: 0 }]}
+        InputStyle={[TextAreaStyle, { height: 112, padding: 0 }]}
         multiline={true}
         description={description}
         numberOfLines={4}

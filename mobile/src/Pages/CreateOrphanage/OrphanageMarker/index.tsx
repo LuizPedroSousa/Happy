@@ -11,7 +11,7 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import NextPage from '../../../Components/NextPage';
 import { api } from '../../../Services/api';
 
-interface Position {
+interface IPosition {
   latitude: number;
   longitude: number;
 }
@@ -20,8 +20,8 @@ interface Position {
 const CreateOrphanage: React.FC = () => {
   //States
   const [viewNextButton, setViewNextButton] = useState(false);
-  const [position, setPosition] = useState<Position>();
-  const [orphanage, setOrphanage] = useState<Position[]>([]);
+  const [position, setPosition] = useState<IPosition>();
+  const [orphanage, setOrphanage] = useState<IPosition[]>([]);
 
   const handlePositionMarker = (e: MapEvent) => {
     setPosition(e.nativeEvent.coordinate);
