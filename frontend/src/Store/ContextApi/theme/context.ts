@@ -1,8 +1,8 @@
 import { createContext } from 'react';
 import light from '../../../Styles/themes/light';
-const ThemeContext = createContext({
+const ThemeChangeContext = createContext({
     theme: light,
     toggleTheme: () => { },
 });
 
-export default ThemeContext;
+export default ThemeChangeContext;

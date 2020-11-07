@@ -2,12 +2,11 @@ import React from 'react';
 import { ThemeProvider } from 'styled-components';
 import Routers from './Routers';
 import GlobalStyle from './Styles/global';
-import ThemeContext from './Store/ContextApi/theme/context';
-import ThemeChangeProvider from './Store/ContextApi/theme/provider';
+import { ThemeChangeProvider, Consumer } from './Store/ContextApi/theme/provider';
 function App() {
   return (
     <ThemeChangeProvider>
-      <ThemeContext.Consumer>
+      <Consumer>
         {theme =>
           <ThemeProvider
             theme={theme.theme}
@@ -15,7 +14,7 @@ function App() {
             <GlobalStyle />
             <Routers />
           </ThemeProvider>}
-      </ThemeContext.Consumer>
+      </Consumer>
     </ThemeChangeProvider>
   );
 }
