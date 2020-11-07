@@ -1,45 +1,42 @@
 import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
-export class createImages1602768882713 implements MigrationInterface {
+export class users1604726781529 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(new Table({
-            name: 'images',
+            name: 'users',
             columns: [
                 {
                     name: 'id',
                     type: 'integer',
-                    unsigned: true,
                     isPrimary: true,
+                    unsigned: true,
                     isGenerated: true,
                     generationStrategy: 'increment',
                 },
                 {
-                    name: 'path',
+                    name: 'name',
                     type: 'varchar',
                 },
                 {
-                    name: 'orphanage_id',
-                    type: 'integer',
-                    unsigned: true,
+                    name: 'surname',
+                    type: 'varchar',
                 },
-            ],
-            foreignKeys: [
                 {
-                    name: 'ImageOrphanage',
-                    columnNames: ['orphanage_id'],
-                    referencedTableName: 'orphanages',
-                    referencedColumnNames: ['id'],
-                    onUpdate: 'CASCADE',
-                    onDelete: 'CASCADE',
-
-                }
+                    name: 'email',
+                    isUnique: true,
+                    type: 'varchar',
+                },
+                {
+                    name: 'password',
+                    type: 'text',
+                },
             ]
         }));
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropTable('images')
+        await queryRunner.dropTable('users');
     }
 
 }
