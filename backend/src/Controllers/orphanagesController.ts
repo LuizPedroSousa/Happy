@@ -4,7 +4,7 @@ import Orphanages from '../Models/Orphanages';
 import OrphanagesView from '../Views/Orphanages_view';
 import * as Yup from 'yup';
 
-export default class orphanagesController {
+class orphanagesController {
 
     async index(req: Request, res: Response) {
         const orphanagesRepository = getRepository(Orphanages);
@@ -111,3 +111,5 @@ export default class orphanagesController {
 
     }
 }
+
+export default new orphanagesController();
