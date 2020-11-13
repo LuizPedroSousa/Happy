@@ -25,13 +25,15 @@ export default class Orphanage {
     instructions: string;
 
     @Column()
+    // tslint:disable-next-line: variable-name
     opening_hours: string;
 
     @Column()
+    // tslint:disable-next-line: variable-name
     open_on_weekends: boolean;
 
 
-    @OneToMany(() => Image, Image => Image.orphanage, {
+    @OneToMany(() => Image, image => image.orphanage, {
         cascade: ['insert', 'update']
     })
     @JoinColumn({ name: 'orphanage_id' })

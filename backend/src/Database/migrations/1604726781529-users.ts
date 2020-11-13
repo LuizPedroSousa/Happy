@@ -1,5 +1,7 @@
 import { MigrationInterface, QueryRunner, Table } from "typeorm";
+import { date } from "yup";
 
+// tslint:disable-next-line: class-name
 export class users1604726781529 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
@@ -8,16 +10,14 @@ export class users1604726781529 implements MigrationInterface {
             columns: [
                 {
                     name: 'id',
-                    type: 'integer',
+                    type: 'varchar',
                     isPrimary: true,
-                    unsigned: true,
-                    isGenerated: true,
-                    generationStrategy: 'increment',
+                    generationStrategy: 'uuid',
                 },
                 {
                     name: 'status',
-                    type: 'integer',
-                    default: 0,
+                    type: 'boolean',
+                    default: false,
                 },
                 {
                     name: 'name',
@@ -35,6 +35,11 @@ export class users1604726781529 implements MigrationInterface {
                 {
                     name: 'password',
                     type: 'text',
+                },
+                {
+                    name: 'createdAt',
+                    type: 'timestamp',
+                    default: 'CURRENT_TIMESTAMP'
                 },
             ]
         }));

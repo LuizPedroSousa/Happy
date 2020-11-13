@@ -10,7 +10,7 @@ export default class Images {
     @Column()
     path: string;
 
-    @ManyToOne(() => Orphanage, Orphanage => Orphanage.images, {
+    @ManyToOne(() => Orphanage, orphanage => orphanage.images, {
         cascade: ['insert', 'update']
     })
     @JoinColumn({name: 'orphanage_id'})

@@ -4,7 +4,7 @@ import Orphanages from '../Models/Orphanages';
 import OrphanagesView from '../Views/Orphanages_view';
 import * as Yup from 'yup';
 
-class orphanagesController {
+class OrphanagesController {
 
     async index(req: Request, res: Response) {
         const orphanagesRepository = getRepository(Orphanages);
@@ -38,8 +38,8 @@ class orphanagesController {
 
         const reqImages = req.files as Express.Multer.File[];
 
-        const images = reqImages.map(images => {
-            return { path: images.filename }
+        const images = reqImages.map(Images => {
+            return { path: Images.filename }
         })
 
         const data = {
@@ -102,14 +102,6 @@ class orphanagesController {
             orphanage: OrphanagesView.Render(orphanage),
         });
     }
-
-    async update(req: Request, res: Response) {
-
-    }
-
-    async delete(req: Request, res: Response) {
-
-    }
 }
 
-export default new orphanagesController();
+export default new OrphanagesController();

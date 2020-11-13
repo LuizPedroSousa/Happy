@@ -1,9 +1,9 @@
-import { IRequest, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 import jwt from 'jsonwebtoken';
 
-export default (req: IRequest, res: Response, next: NextFunction) => {
-    const {authorization} = req.headers;
+export default (req: Request, res: Response, next: NextFunction) => {
+    const { authorization } = req.headers;
 
     if (!authorization)
         return res.status(400).json({

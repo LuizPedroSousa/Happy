@@ -1,6 +1,5 @@
-import { Request } from 'express';
-declare module 'express' {
-    interface IRequest extends Request {
+declare namespace Express {
+    interface  Request{
         userId?: string;
     }
 }

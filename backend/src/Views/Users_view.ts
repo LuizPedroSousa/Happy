@@ -4,11 +4,11 @@ export default {
     render(users: Users) {
         return {
             id: users.id,
-            status: users.status || 0,
+            status: users.status,
             name: users.name,
             surname: users.surname,
             email: users.email,
-            password: undefined,
+            createdAt: users.createdAt,
         }
     },
     renderMany(users: Users[]) {

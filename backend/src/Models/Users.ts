@@ -2,11 +2,11 @@ import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } fr
 import bcrypt from 'bcrypt';
 @Entity('users')
 export default class {
-    @PrimaryGeneratedColumn('increment')
+    @PrimaryGeneratedColumn('uuid')
     id: number;
 
     @Column()
-    status: number;
+    status: boolean;
 
     @Column()
     name: string;
@@ -19,6 +19,9 @@ export default class {
 
     @Column()
     password: string;
+
+    @Column()
+    createdAt: string;
 
     @BeforeInsert()
     @BeforeUpdate()
