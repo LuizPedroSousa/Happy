@@ -1,10 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn } from 'typeorm';
-import Image from './Images';
+import { Entity, Column, OneToMany, JoinColumn, BeforeInsert, PrimaryColumn } from 'typeorm';
+import OrphanageImage from './Orphanage_Images';
+import { uuid } from 'uuidv4';
 
 @Entity('orphanages')
 export default class Orphanage {
-    @PrimaryGeneratedColumn('increment')
-    id: number;
+    @PrimaryColumn('uuid')
+    id: string;
 
     @Column()
     latitude: number;
@@ -32,10 +33,14 @@ export default class Orphanage {
     // tslint:disable-next-line: variable-name
     open_on_weekends: boolean;
 
+    @BeforeInsert()
+    generateId(){
+        this.id = uuid();
+    }
 
-    @OneToMany(() => Image, image => image.orphanage, {
+    @OneToMany(() => OrphanageImage, image => image.orphanage, {
         cascade: ['insert', 'update']
     })
     @JoinColumn({ name: 'orphanage_id' })
-    images: Image[];
+    images: OrphanageImage[];
 }

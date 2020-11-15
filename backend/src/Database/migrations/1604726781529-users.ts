@@ -1,5 +1,4 @@
 import { MigrationInterface, QueryRunner, Table } from "typeorm";
-import { date } from "yup";
 
 // tslint:disable-next-line: class-name
 export class users1604726781529 implements MigrationInterface {
@@ -12,7 +11,6 @@ export class users1604726781529 implements MigrationInterface {
                     name: 'id',
                     type: 'varchar',
                     isPrimary: true,
-                    generationStrategy: 'uuid',
                 },
                 {
                     name: 'status',

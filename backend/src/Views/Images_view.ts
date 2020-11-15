@@ -1,14 +1,17 @@
-import Image from '../Models/Images';
+import OrpImageType from '../Models/Orphanage_Images';
+import UserImageType from '../Models/Users_Images';
+
+type Image = OrpImageType | UserImageType;
 
 export default {
-    Render(image: Image){
+    Render(image:Image , path: string){
         return {
             id: image.id,
-            url: `http://192.168.15.10:${process.env.PORT || 3333}/Uploads/${image.path}`
+            url: `http://${process.env.ADDRESS}:${process.env.PORT || 3333}/Uploads/${path}/${image.path}`
         }
     },
 
-    RenderMany(image: Image[]){
-        return image.map(image => this.Render(image));
+    RenderMany(image: Image[], path: string){
+        return image.map(img => this.Render(img, path));
     }
 }

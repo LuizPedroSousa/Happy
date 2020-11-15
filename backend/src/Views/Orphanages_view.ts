@@ -12,10 +12,10 @@ export default {
             instructions: orphanage.instructions,
             opening_hours: orphanage.opening_hours,
             open_on_weekends: orphanage.open_on_weekends,
-            images: Images.RenderMany(orphanage.images),
+            images: Images.RenderMany(orphanage.images, 'Orphanages'),
         }
     },
-    RenderMany(orphange: Orphanage[]) {
-        return orphange.map(orphange => this.Render(orphange));
+    RenderMany(Orphange: Orphanage[]) {
+        return Orphange.map(orphange => this.Render(orphange));
     }
 }

@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 interface IParams {
-    id: number;
+    id: string;
 }
 
 

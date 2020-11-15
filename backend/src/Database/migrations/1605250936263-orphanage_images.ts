@@ -1,19 +1,18 @@
-import { MigrationInterface, QueryRunner, Table } from "typeorm";
+import {MigrationInterface, QueryRunner, Table} from "typeorm";
 
 // tslint:disable-next-line: class-name
-export class createImages1602768882713 implements MigrationInterface {
+export class orphanageImages1605250936263 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.createTable(new Table({
-            name: 'images',
+        queryRunner.createTable(new Table({
+            name: 'orphanage_images',
             columns: [
                 {
                     name: 'id',
-                    type: 'integer',
-                    unsigned: true,
+                    type: 'varchar',
                     isPrimary: true,
                     isGenerated: true,
-                    generationStrategy: 'increment',
+                    generationStrategy: 'uuid',
                 },
                 {
                     name: 'path',
@@ -21,8 +20,7 @@ export class createImages1602768882713 implements MigrationInterface {
                 },
                 {
                     name: 'orphanage_id',
-                    type: 'integer',
-                    unsigned: true,
+                    type: 'varchar',
                 },
             ],
             foreignKeys: [
@@ -34,13 +32,13 @@ export class createImages1602768882713 implements MigrationInterface {
                     onUpdate: 'CASCADE',
                     onDelete: 'CASCADE',
 
-                }
+                },
             ]
-        }));
+        }))
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropTable('images')
+        await queryRunner.dropTable('orphanage_images');
     }
 
 }

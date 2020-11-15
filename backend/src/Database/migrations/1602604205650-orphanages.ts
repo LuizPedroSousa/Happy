@@ -1,5 +1,6 @@
 import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
+// tslint:disable-next-line: class-name
 export class orphanages1602604205650 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
@@ -8,11 +9,8 @@ export class orphanages1602604205650 implements MigrationInterface {
             columns: [
                 {
                     name: 'id',
-                    type: 'integer',
-                    unsigned: true,
+                    type: 'varchar',
                     isPrimary: true,
-                    isGenerated: true,
-                    generationStrategy: 'increment',
                 },
                 {
                     name: 'name',

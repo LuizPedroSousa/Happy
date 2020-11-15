@@ -1,20 +1,24 @@
-import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
+import {Request, Response}from 'express';
+import { getRepository}from 'typeorm';
 import Users from '../Models/Users';
 import UsersView from '../Views/Users_view';
-
 interface IFilters{
     status?: number;
     name?: string;
     surname?: string;
 }
 
-class UserAdminController {
+
+class UserActionsController{
     async index(req: Request, res: Response) {
         const filters = req.query as IFilters;
         const usersRepository = getRepository(Users);
 
-        const users = await usersRepository.find(filters && {where: filters});
+        const users = await usersRepository.find(
+            filters ? {
+                relations: ['image'],
+                where: filters
+            } : {relations:['image']} );
 
         if (!users)
             return res.status(400).json({
@@ -32,11 +36,7 @@ class UserAdminController {
 
         const userRepository = getRepository(Users);
 
-        const user = await userRepository.findOne(id);
-        if (!user)
-            return res.status(400).json({
-                error: 'User not found',
-            });
+        const user = await userRepository.findOneOrFail(id, {relations: ['image']});
 
         if (user.status)
             return res.status(400).json({
@@ -45,7 +45,7 @@ class UserAdminController {
 
         await userRepository.update(id, { status: true });
 
-        const userUpdated = await userRepository.findOneOrFail(id);
+        const userUpdated = await userRepository.findOneOrFail(id, {relations: ['image']});
 
         return res.status(201).json({
             user: UsersView.render(userUpdated),
@@ -57,19 +57,15 @@ class UserAdminController {
 
         const userRepository = getRepository(Users);
 
-        const user = await userRepository.findOne(id);
-
-        if (!user)
-            return res.status(400).json({
-                error: 'User not found',
-            });
+        const user = await userRepository.findOneOrFail(id, {relations: ['image']});
 
         if (user.status)
             return res.status(400).json({
                 error: 'You dont complete this: user are admin',
             });
 
-        await userRepository.delete(user);
+        await userRepository.delete(id);
+
 
         return res.status(201).json({
             Okay: 'User rejected with successfully',
@@ -78,4 +74,4 @@ class UserAdminController {
     }
 }
 
-export default new UserAdminController();
+export default new UserActionsController();

@@ -16,6 +16,7 @@ export interface IMail {
 }
 
 class UserController {
+
     async create(req: Request, res: Response) {
         const {
             status,
@@ -27,33 +28,48 @@ class UserController {
 
         const usersRepository = getRepository(Users);
 
+        const reqImage = req.files as Express.Multer.File[];
+
+        const {path} = reqImage.map(img => {
+            return {path: img.filename}
+        })[0] || [];
+
+        const image ={ path }
+
         const data = {
-            status,
+            status: status === 'true' ? true : false,
             name,
             surname,
             email,
             password,
+            image,
         }
+
         const schema = Yup.object().shape({
             status: Yup.boolean().notRequired(),
             name: Yup.string().required(),
             surname: Yup.string().required(),
             email: Yup.string().email().required(),
             password: Yup.string().required(),
+            image: Yup.object().shape({
+                path: Yup.string().notRequired(),
+            }),
         });
 
         await schema.validate(data, {
-            abortEarly: true,
+            abortEarly: false,
         });
-
 
         const usersAdmin = await usersRepository.find({
+            relations: ['image'],
             where: { status: true },
         });
+
 
         const user = usersRepository.create(data);
         await usersRepository.save(user);
 
+        if(usersAdmin)
         usersAdmin.map(userAdmin => transport.sendMail({
             from: process.env.NODEMAILER_DEFAULT_USER,
             to: userAdmin.email,
@@ -85,7 +101,10 @@ class UserController {
 
         const userRepository = getRepository(Users);
 
-        const user = await userRepository.findOneOrFail({ where: { email } });
+        const user = await userRepository.findOneOrFail({
+            relations: ['image'],
+            where: { email }
+        });
 
         if (!await bcrypt.compare(password, user.password))
             return res.status(400).json({
@@ -109,7 +128,7 @@ class UserController {
 
         const userRepository = getRepository(Users);
 
-        const user = await userRepository.findOneOrFail(payload);
+        const user = await userRepository.findOneOrFail(payload, {relations: ['image']});
 
         return res.status(201).json({
             user: UsersView.render(user),
@@ -127,28 +146,42 @@ class UserController {
 
         const userRepository = getRepository(Users);
 
-        const user = await userRepository.findOneOrFail(payload);
+        const user = await userRepository.findOneOrFail(payload, {relations: ['image']});
+
+        const reqFile = req.files as Express.Multer.File[];
+
+        const {path} = reqFile.map(img => {
+            return {path: img.filename}
+        })[0] || [];
+
+        const image = {
+            id: user.image.id,
+            path: path ? path : user.image.path,
+        };
 
         const data = {
+            id: payload,
             name: name ? name : user.name,
             surname: surname ? surname : user.surname,
             email: email ? email : user.email,
+            image,
         }
-
 
         const schema = Yup.object().shape({
             name: Yup.string().required(),
             surname: Yup.string().required(),
             email: Yup.string().required().email(),
+
         });
 
         await schema.validate(data, {
             abortEarly: false,
         });
 
-        await userRepository.update(user.id, data);
+        await userRepository.save(data)
 
-        const userUpdated = await userRepository.findOneOrFail(payload);
+
+       const userUpdated = await userRepository.findOneOrFail(payload, {relations: ['image']});
 
         transport.sendMail({
             from: process.env.NODEMAILER_DEFAULT_USER,
@@ -174,7 +207,6 @@ class UserController {
             user: UsersView.render(userUpdated),
         });
     }
-
 
 }
 
