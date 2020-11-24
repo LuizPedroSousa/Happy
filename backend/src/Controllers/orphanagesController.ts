@@ -1,28 +1,28 @@
-import { Request, Response } from 'express';
+import { Request, Response, Express } from 'express';
 import { getRepository } from 'typeorm';
 import Orphanages from '../Models/Orphanages';
 import OrphanagesView from '../Views/Orphanages_view';
 import * as Yup from 'yup';
 
 class OrphanagesController {
-
-    async index(req: Request, res: Response) {
+    async index (req: Request, res: Response) {
         const orphanagesRepository = getRepository(Orphanages);
         const orphanage = await orphanagesRepository.find({
-            relations: ['images'],
+            relations: ['images']
         });
-        if (!orphanage)
+        if (!orphanage[0]) {
             return res.status(400).json({
-                error: 'Orphanage not found',
+                error: 'Orphanage not found'
             });
+        }
 
         return res.status(201).json({
             Status: 'Okay',
-            Orphanages: OrphanagesView.RenderMany(orphanage),
+            Orphanages: OrphanagesView.RenderMany(orphanage)
         });
     }
 
-    async create(req: Request, res: Response) {
+    async create (req: Request, res: Response) {
         const {
             latitude,
             longitude,
@@ -31,16 +31,18 @@ class OrphanagesController {
             whatsapp,
             instructions,
             opening_hours,
-            open_on_weekends,
+            open_on_weekends
         } = req.body;
 
         const orphanagesRepository = getRepository(Orphanages);
 
         const reqImages = req.files as Express.Multer.File[];
 
-        const images = reqImages.map(Images => {
-            return { path: Images.filename }
-        })
+        const images = reqImages
+            ? reqImages.map(Images => {
+                return { path: Images.filename };
+            })
+            : [];
 
         const data = {
             name,
@@ -50,9 +52,9 @@ class OrphanagesController {
             whatsapp,
             instructions,
             opening_hours,
-            open_on_weekends: open_on_weekends === 'true' ? true : false,
-            images,
-        }
+            open_on_weekends: open_on_weekends === 'true',
+            images
+        };
 
         const schema = Yup.object().shape({
             name: Yup.string().required(),
@@ -65,41 +67,34 @@ class OrphanagesController {
             open_on_weekends: Yup.boolean().required(),
             images: Yup.array(
                 Yup.object().shape({
-                    path: Yup.string().required(),
+                    path: Yup.string().required()
                 })
             )
         });
 
         await schema.validate(data, {
-            abortEarly: false,
+            abortEarly: false
         });
-
 
         const orphanage = orphanagesRepository.create(data);
         await orphanagesRepository.save(orphanage);
 
         return res.status(201).json({
-            Status: 'Okay, datas inserts to orphanage table',
-            orphanage,
+            Status: 'Okay, datas inserts into orphanage table',
+            orphanage
         });
     }
 
-    async show(req: Request, res: Response) {
+    async show (req: Request, res: Response) {
         const { id } = req.params;
         const orphanagesRepository = getRepository(Orphanages);
         const orphanage = await orphanagesRepository.findOneOrFail(id, {
-            relations: ['images'],
+            relations: ['images']
         });
-
-        if (!orphanage)
-            return res.status(400).json({
-                error: 'Orphanage not found',
-            });
-
 
         return res.status(201).json({
             Status: 'Okay',
-            orphanage: OrphanagesView.Render(orphanage),
+            orphanage: OrphanagesView.Render(orphanage)
         });
     }
 }

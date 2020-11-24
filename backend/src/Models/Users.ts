@@ -1,8 +1,8 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, OneToOne, PrimaryColumn, OneToMany } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToOne, PrimaryColumn } from 'typeorm';
 import bcrypt from 'bcrypt';
 import UserImages from './Users_Images';
 
-import {uuid}from 'uuidv4'
+import { uuid } from 'uuidv4';
 
 @Entity('users')
 export default class {
@@ -29,17 +29,17 @@ export default class {
 
     @BeforeInsert()
     @BeforeUpdate()
-    hasPassword() {
+    hasPassword () {
         this.password = bcrypt.hashSync(this.password, 10);
     }
 
     @BeforeInsert()
-    generateId(){
+    generateId () {
         this.id = uuid();
     }
 
     @OneToOne(() => UserImages, userImage => userImage.user, {
-        cascade: ['insert', 'update'],
+        cascade: ['insert', 'update']
     })
     image: UserImages;
 }

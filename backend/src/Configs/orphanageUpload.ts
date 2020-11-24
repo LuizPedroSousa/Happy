@@ -9,5 +9,5 @@ export default {
 
             cb(null, fileName);
         }
-    }),
+    })
 };

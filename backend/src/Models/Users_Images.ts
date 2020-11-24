@@ -3,8 +3,7 @@ import { uuid } from 'uuidv4';
 import User from './Users';
 
 @Entity('user_images')
-export default class UserImages{
-
+export default class UserImages {
     @PrimaryColumn('uuid')
     id: string;
 
@@ -12,20 +11,19 @@ export default class UserImages{
     path: string;
 
     @BeforeInsert()
-    hasPath(){
-        if(!this.path)
-        this.path = '1605341716749-defaultAvatar.png'
+    hasPath () {
+        if (!this.path) { this.path = '1605341716749-defaultAvatar.png'; };
     }
 
     @BeforeInsert()
     @BeforeUpdate()
-    generateId(){
+    generateId () {
         this.id = uuid();
     }
 
     @OneToOne(() => User, user => user.image, {
-        cascade: ['insert', 'update'],
+        cascade: ['insert', 'update']
     })
-    @JoinColumn({name: 'user_id'})
+    @JoinColumn({ name: 'user_id' })
     user: User;
 }

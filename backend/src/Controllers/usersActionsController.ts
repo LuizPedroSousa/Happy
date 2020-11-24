@@ -1,5 +1,5 @@
-import {Request, Response}from 'express';
-import { getRepository}from 'typeorm';
+import { Request, Response } from 'express';
+import { getRepository } from 'typeorm';
 import Users from '../Models/Users';
 import UsersView from '../Views/Users_view';
 interface IFilters{
@@ -8,68 +8,70 @@ interface IFilters{
     surname?: string;
 }
 
-
-class UserActionsController{
-    async index(req: Request, res: Response) {
+class UserActionsController {
+    async index (req: Request, res: Response) {
         const filters = req.query as IFilters;
         const usersRepository = getRepository(Users);
 
         const users = await usersRepository.find(
-            filters ? {
-                relations: ['image'],
-                where: filters
-            } : {relations:['image']} );
+            filters
+                ? {
+                    relations: ['image'],
+                    where: filters
+                }
+                : { relations: ['image'] });
 
-        if (!users)
+        if (!users) {
             return res.status(400).json({
-                error: 'users not found',
+                error: 'users not found'
             });
+        }
 
         return res.status(201).json({
-            users: UsersView.renderMany(users),
+            users: UsersView.renderMany(users)
         });
-
     }
 
-    async acceptUser(req: Request, res: Response) {
+    async acceptUser (req: Request, res: Response) {
         const { id } = req.params;
 
         const userRepository = getRepository(Users);
 
-        const user = await userRepository.findOneOrFail(id, {relations: ['image']});
+        const user = await userRepository.findOneOrFail(id, { relations: ['image'] });
 
-        if (user.status)
+        if (user.status) {
             return res.status(400).json({
-                error: 'You dont complete this: user are admin',
+                error: 'You dont complete this: user are admin'
             });
+        }
 
         await userRepository.update(id, { status: true });
 
-        const userUpdated = await userRepository.findOneOrFail(id, {relations: ['image']});
+        const userUpdated = await userRepository.findOneOrFail(id, { relations: ['image'] });
 
         return res.status(201).json({
-            user: UsersView.render(userUpdated),
+            user: UsersView.render(userUpdated)
         });
     }
 
-    async rejectUser(req: Request, res: Response) {
+    async rejectUser (req: Request, res: Response) {
         const { id } = req.params;
 
         const userRepository = getRepository(Users);
 
-        const user = await userRepository.findOneOrFail(id, {relations: ['image']});
+        const user = await userRepository.findOneOrFail(id, { relations: ['image'] });
 
-        if (user.status)
+        if (user.status) {
             return res.status(400).json({
-                error: 'You dont complete this: user are admin',
+                error: 'You dont complete this: user are admin'
             });
+        }
 
         await userRepository.delete(id);
 
-
         return res.status(201).json({
             Okay: 'User rejected with successfully',
-            user: UsersView.render(user),
+            user: UsersView.render(user)
         });
     }
 }

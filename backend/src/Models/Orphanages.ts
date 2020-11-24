@@ -34,7 +34,7 @@ export default class Orphanage {
     open_on_weekends: boolean;
 
     @BeforeInsert()
-    generateId(){
+    generateId () {
         this.id = uuid();
     }
 

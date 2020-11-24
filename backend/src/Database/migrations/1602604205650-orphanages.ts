@@ -1,16 +1,15 @@
-import { MigrationInterface, QueryRunner, Table } from "typeorm";
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 // tslint:disable-next-line: class-name
 export class orphanages1602604205650 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
+    public async up (queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(new Table({
             name: 'orphanages',
             columns: [
                 {
                     name: 'id',
                     type: 'varchar',
-                    isPrimary: true,
+                    isPrimary: true
                 },
                 {
                     name: 'name',
@@ -21,28 +20,30 @@ export class orphanages1602604205650 implements MigrationInterface {
                     type: 'decimal',
                     precision: 10,
                     scale: 7,
+                    isUnique: true
                 },
                 {
                     name: 'longitude',
                     type: 'decimal',
                     precision: 10,
                     scale: 7,
+                    isUnique: true
                 },
                 {
                     name: 'about',
-                    type: 'text',
+                    type: 'text'
                 },
                 {
                     name: 'whatsapp',
-                    type: 'varchar',
+                    type: 'varchar'
                 },
                 {
                     name: 'instructions',
-                    type: 'text',
+                    type: 'text'
                 },
                 {
                     name: 'opening_hours',
-                    type: 'varchar',
+                    type: 'varchar'
                 },
                 {
                     name: 'open_on_weekends',
@@ -50,11 +51,10 @@ export class orphanages1602604205650 implements MigrationInterface {
                     default: false
                 }
             ]
-        }))
+        }));
     }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
+    public async down (queryRunner: QueryRunner): Promise<void> {
         await queryRunner.dropTable('orphanages');
     }
-
 }

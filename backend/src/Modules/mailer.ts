@@ -10,15 +10,15 @@ export const transport = nodemailer.createTransport({
     port: Number(process.env.NODEMAILER_PORT),
     auth: {
         user: process.env.NODEMAILER_DEFAULT_USER,
-        pass: process.env.NODEMAILER_DEFAULT_PASSWORD,
+        pass: process.env.NODEMAILER_DEFAULT_PASSWORD
     }
 });
 
 transport.use('compile', hbs({
     viewEngine: {
         defaultLayout: undefined,
-        partialsDir: path.resolve('./src/Resources/mail/'),
+        partialsDir: path.resolve('./src/Resources/mail/')
     },
     viewPath: path.resolve('./src/Resources/mail/'),
-    extName: '.html',
+    extName: '.html'
 }));

@@ -1,25 +1,24 @@
-import {MigrationInterface, QueryRunner, Table} from "typeorm";
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 // tslint:disable-next-line: class-name
 export class userImages1605250938891 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
+    public async up (queryRunner: QueryRunner): Promise<void> {
         queryRunner.createTable(new Table({
             name: 'user_images',
             columns: [
                 {
                     name: 'id',
                     type: 'varchar',
-                    isPrimary: true,
+                    isPrimary: true
                 },
                 {
                     name: 'path',
-                    type: 'varchar',
+                    type: 'varchar'
                 },
                 {
                     name: 'user_id',
-                    type: 'varchar',
-                },
+                    type: 'varchar'
+                }
             ],
             foreignKeys: [
                 {
@@ -28,14 +27,13 @@ export class userImages1605250938891 implements MigrationInterface {
                     referencedTableName: 'users',
                     referencedColumnNames: ['id'],
                     onUpdate: 'CASCADE',
-                    onDelete: 'CASCADE',
-                },
+                    onDelete: 'CASCADE'
+                }
             ]
-        }))
+        }));
     }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropTable('user_images')
+    public async down (queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.dropTable('user_images');
     }
-
 }

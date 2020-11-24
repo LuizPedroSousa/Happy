@@ -8,19 +8,19 @@ interface ValidationErrors {
 
 const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
     if (error instanceof ValidationError) {
-        let errors: ValidationErrors = {};
+        const errors: ValidationErrors = {};
 
-        error.inner.forEach(err => errors[err.path] = err.errors)
+        error.inner.forEach(err => (errors[err.path] = err.errors));
 
         return res.status(400).json({
-            error: 'Validations erros',
-            errors,
-        })
+            error: 'Validations errors',
+            errors
+        });
     }
 
-    console.log(error);
+    process.env.NODE_ENV !== 'test' && console.log(error);
 
-    return res.status(500).json({ message: 'Internal server error', });
-}
+    return res.status(500).json({ message: 'Internal server error' });
+};
 
-export default errorHandler
+export default errorHandler;

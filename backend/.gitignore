@@ -1,3 +1,8 @@
 node_modules
 ormconfig.json
-.env
+test.env
+dev.env
+Uploads/Orphanages/**
+Uploads/Users/**
+!Uploads/Users/1605341716749-defaultAvatar.png
+__tests__/coverage

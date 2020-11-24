@@ -15,7 +15,8 @@
         "@typescript-eslint"
     ],
     "rules": {
-        "indent": ["error", 2],
-        "semicolon": [true, "aways"]
+        "indent": ["error", 4],
+        "semi": ["error", "always"],
+        "camelcase": "off"
     }
 }
