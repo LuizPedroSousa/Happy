@@ -6,7 +6,7 @@ type Image = OrpImageType | UserImageType;
 export default {
     Render (image:Image, path: string) {
         return {
-            id: image.id,
+            id: image.id && image.id,
             url: `http://${process.env.ADDRESS}:${process.env.PORT || 3333}/Uploads/${path}/${image.path}`
         };
     },

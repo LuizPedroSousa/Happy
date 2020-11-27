@@ -19,7 +19,7 @@ Routes.get('/orphanages/show/:id', OrphanagesController.show);
 Routes.post('/orphanages/create', uploadOrphanage.array('images'), OrphanagesController.create);
 
 // User flow
-Routes.post('/users/create', uploadUser.array('image'), UserController.create);
+Routes.post('/users/create', uploadUser.single('image'), UserController.create);
 Routes.get('/users/auth', UserController.auth);
 Routes.get('/users/admin/show', auth, UserController.show);
 Routes.put('/users/admin/update', auth, uploadUser.array('image'), UserController.update);

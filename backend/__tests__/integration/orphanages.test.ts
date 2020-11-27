@@ -1,5 +1,4 @@
-import { createConnection, getRepository } from 'typeorm';
-import Orphanage from '../../src/Models/Orphanages';
+import { createConnection, getConnection } from 'typeorm';
 import clearData from '../Utils/clearData';
 import req from 'supertest';
 import app from '../../src/app';
@@ -12,6 +11,10 @@ beforeAll(async () => {
 
 beforeEach(async () => {
     await clearData();
+});
+
+afterAll(async () => {
+    await getConnection().close();
 });
 
 describe('/orphanages', () => {
@@ -40,10 +43,7 @@ describe('/orphanages', () => {
 
     describe('Index', () => {
         it('should return a status 201, when all orphanages are found', async () => {
-            const orphanageRespository = getRepository(Orphanage);
-            const orphanage = await OrphanageFactory.create();
-
-            await orphanageRespository.save(orphanage);
+            await OrphanageFactory.create();
 
             const res = await req(app)
                 .get('/orphanages');
@@ -62,11 +62,7 @@ describe('/orphanages', () => {
 
     describe('Show', () => {
         it('should return a status 201 when the orphanage with the reference id is found', async () => {
-            const orphanageRespository = getRepository(Orphanage);
-
             const orphanage = await OrphanageFactory.create();
-
-            await orphanageRespository.save(orphanage);
 
             const res = await req(app)
                 .get(`/orphanages/show/${orphanage.id}`);

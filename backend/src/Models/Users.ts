@@ -1,7 +1,7 @@
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToOne, PrimaryColumn } from 'typeorm';
 import bcrypt from 'bcrypt';
 import UserImages from './Users_Images';
-
+import jwt from 'jsonwebtoken';
 import { uuid } from 'uuidv4';
 
 @Entity('users')
@@ -36,6 +36,15 @@ export default class {
     @BeforeInsert()
     generateId () {
         this.id = uuid();
+    }
+
+    generateToken () {
+        const PrivateKey = JSON.stringify(process.env.PRIVATE_KEY?.replace(/\\n/g, '\n'));
+
+        return jwt.sign({ id: this.id }, JSON.parse(PrivateKey), {
+            expiresIn: 3306,
+            algorithm: 'RS256'
+        });
     }
 
     @OneToOne(() => UserImages, userImage => userImage.user, {

@@ -18,7 +18,7 @@ const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
         });
     }
 
-    process.env.NODE_ENV !== 'test' && console.log(error);
+    console.log(error);
 
     return res.status(500).json({ message: 'Internal server error' });
 };

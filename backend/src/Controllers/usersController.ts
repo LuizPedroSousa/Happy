@@ -5,7 +5,6 @@ import UsersView from '../Views/Users_view';
 import bcrypt from 'bcrypt';
 import * as Yup from 'yup';
 import { transport } from '../Modules/mailer';
-import generateToken from '../Utils/generateToken';
 import * as dotenv from 'dotenv';
 dotenv.config();
 export interface IMail {
@@ -19,7 +18,6 @@ export interface IMail {
 class UserController {
     async create (req: Request, res: Response) {
         const {
-            status,
             name,
             surname,
             email,
@@ -28,16 +26,10 @@ class UserController {
 
         const usersRepository = getRepository(Users);
 
-        const reqImage = req.files as Express.Multer.File[];
+        const reqImage = req.file as Express.Multer.File;
 
-        const { path } = reqImage.map(img => {
-            return { path: img.filename };
-        })[0] || [];
-
-        const image = { path };
-
+        const image = reqImage ? { path: reqImage.filename } : { path: '' };
         const data = {
-            status: status === 'true',
             name,
             surname,
             email,
@@ -46,14 +38,13 @@ class UserController {
         };
 
         const schema = Yup.object().shape({
-            status: Yup.boolean().notRequired(),
             name: Yup.string().required(),
             surname: Yup.string().required(),
             email: Yup.string().email().required(),
             password: Yup.string().required(),
             image: Yup.object().shape({
                 path: Yup.string().notRequired()
-            })
+            }).required()
         });
 
         await schema.validate(data, {
@@ -68,27 +59,25 @@ class UserController {
         const user = usersRepository.create(data);
         await usersRepository.save(user);
 
-        if (usersAdmin) {
-            usersAdmin.map(userAdmin => transport.sendMail({
-                from: process.env.NODEMAILER_DEFAULT_USER,
-                to: userAdmin.email,
-                subject: `Olá ${userAdmin.name}`,
-                template: 'create/user',
-                context: {
-                    nameAdmin: userAdmin.name,
-                    name: user.name,
-                    surname: user.surname,
-                    email: user.email,
-                    id: user.id
-                }
-            } as IMail, err => {
-                if (err) {
-                    return res.status(400).json({
-                        error: 'Failed to send email to admins'
-                    });
-                }
-            }));
-        }
+        usersAdmin.map(userAdmin => transport.sendMail({
+            from: process.env.NODEMAILER_DEFAULT_USER,
+            to: userAdmin.email,
+            subject: `Olá ${userAdmin.name}`,
+            template: 'create/user',
+            context: {
+                nameAdmin: userAdmin.name,
+                name: user.name,
+                surname: user.surname,
+                email: user.email,
+                id: user.id
+            }
+        } as IMail, err => {
+            if (err) {
+                return res.status(400).json({
+                    error: 'Failed to send email to admins'
+                });
+            }
+        }));
 
         return res.status(201).json({
             user: UsersView.render(user)
@@ -100,26 +89,32 @@ class UserController {
 
         const userRepository = getRepository(Users);
 
-        const user = await userRepository.findOneOrFail({
+        const user = await userRepository.findOne({
             relations: ['image'],
             where: { email }
         });
 
+        if (!user) {
+            return res.status(401).json({
+                error: 'Invalid email'
+            });
+        };
+
         if (!await bcrypt.compare(password, user.password)) {
-            return res.status(400).json({
+            return res.status(401).json({
                 error: 'Invalid password'
             });
         }
 
         if (!user.status) {
-            return res.status(400).json({
+            return res.status(401).json({
                 error: 'your account is being reviewed by one of our admins'
             });
         }
 
         return res.status(201).json({
             user: UsersView.render(user),
-            token: generateToken({ id: user.id })
+            token: user.generateToken()
         });
     }
 

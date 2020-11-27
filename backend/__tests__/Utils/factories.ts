@@ -10,5 +10,4 @@ export const OrphanageFactory = new Factory(Orphanage)
     .sequence('instructions', () => String(faker.commerce.productDescription()))
     .sequence('whatsapp', () => String(faker.phone.phoneFormats()))
     .sequence('opening_hours', () => String(faker.time.recent()))
-    .sequence('open_on_weekends', () => faker.random.boolean())
-    .sequence('images', () => []);
+    .sequence('open_on_weekends', () => faker.random.boolean());
