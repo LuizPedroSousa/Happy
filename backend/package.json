@@ -24,7 +24,7 @@
     "mg": "yarn typeorm migration:run",
     "mgr": "yarn typeorm migration:revert",
     "pretest": "NODE_ENV=test yarn mg",
-    "test": "jest --watch",
+    "test": "jest",
     "posttest": "yarn mgr"
   },
   "devDependencies": {

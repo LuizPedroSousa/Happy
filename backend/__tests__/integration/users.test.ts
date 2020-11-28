@@ -1,9 +1,9 @@
-import { createConnection, getRepository } from 'typeorm';
+import { createConnection } from 'typeorm';
 import app from '../../src/app';
-import Users from '../../src/Models/Users';
 import req from 'supertest';
 import clearData from '../Utils/clearData';
 import path from 'path';
+import { UserFactory } from '../Utils/factories';
 /* eslint-disable no-undef */
 const imageFile = path.join(__dirname, '..', './Images', '/personal-user-illustration-@2x.png');
 beforeAll(async () => {
@@ -16,46 +16,34 @@ beforeEach(async () => {
 describe('/users', () => {
     describe('Create', () => {
         it('should return a status 201 when creating an account with valid credentials', async () => {
-            const data = {
-                name: 'luiz',
-                surname: 'pedro',
-                email: 'luizpedrosousa64@gmail.com',
-                password: '1234'
-            };
+            const user = UserFactory.build();
 
             const res = await req(app)
                 .post('/users/create')
-                .send(data);
+                .send(user);
 
             expect(res.status).toBe(201);
         });
 
         it('should return a status 400, when creating an account with invalid credentials', async () => {
-            const data = {
-                surname: 'pedro',
-                email: 'luizpedrosousa64gmail.com',
-                password: 1234
-            };
+            const user = UserFactory.build({
+                password: undefined,
+                name: undefined
+            });
 
             const res = await req(app)
                 .post('/users/create')
-                .send(data);
+                .send(user);
 
             expect(res.status).toBe(400);
             expect(res.body).toHaveProperty('error', 'Validations errors');
         });
 
         it('should return a 201 status when creating an account with a user image', async () => {
-            const data = {
-                name: 'luiz',
-                surname: 'sousa',
-                email: 'luizpedrosousa64@gmail.com',
-                password: '1234'
-            };
-
+            const user = JSON.stringify(UserFactory.build({ image: undefined }));
             const res = await req(app)
                 .post('/users/create')
-                .field(data)
+                .field(JSON.parse(user))
                 .attach('image', imageFile);
 
             expect(res.status).toBe(201);
@@ -63,51 +51,29 @@ describe('/users', () => {
     });
     describe('Authenticate', () => {
         it('should return a status 201, when users authenticate with valid credentials', async () => {
-            const userRepository = getRepository(Users);
-            const data = {
-                status: true,
-                name: 'Luiz',
-                surname: 'Sousa Lemos',
-                email: 'luizpedrosousa64@gmail.com',
-                password: '1234',
-                image: { path: '' }
-            };
-
-            const user = userRepository.create(data);
-
-            await userRepository.save(user);
+            const user = UserFactory.build();
+            await UserFactory.create(user);
+            const { email, password } = user;
 
             const res = await req(app)
                 .get('/users/auth')
                 .send({
-                    email: data.email,
-                    password: '1234'
+                    email,
+                    password
                 });
-
             expect(res.status).toBe(201);
         });
 
         it('should return a 401 status, when the user email is invalid', async () => {
-            const userRepository = getRepository(Users);
-
-            const data = {
-                status: true,
-                name: 'Luiz',
-                surname: 'Sousa Lemos',
-                email: 'luizpedrosousa64@gmail.com',
-                password: '1234',
-                image: { path: '' }
-            };
-
-            const user = userRepository.create(data);
-
-            await userRepository.save(user);
+            const user = UserFactory.build();
+            const { password } = user;
+            await UserFactory.create(user);
 
             const res = await req(app)
                 .get('/users/auth')
                 .send({
-                    email: 'luizpedrosousa65@gmail.com',
-                    password: '1234'
+                    email: 'luizpedrosousa65gmail.com',
+                    password
                 });
 
             expect(res.status).toBe(401);
@@ -115,25 +81,13 @@ describe('/users', () => {
         });
 
         it('should return a 401 status, when the user password is invalid', async () => {
-            const userRepository = getRepository(Users);
-
-            const data = {
-                status: true,
-                name: 'Luiz',
-                surname: 'Sousa Lemos',
-                email: 'luizpedrosousa64@gmail.com',
-                password: '1234',
-                image: { path: '' }
-            };
-
-            const user = userRepository.create(data);
-
-            await userRepository.save(user);
+            const user = UserFactory.build();
+            const { email } = await UserFactory.create(user);
 
             const res = await req(app)
                 .get('/users/auth')
                 .send({
-                    email: user.email,
+                    email,
                     password: '2316'
                 });
 
@@ -142,25 +96,15 @@ describe('/users', () => {
         });
 
         it('should return a 401 status, when the user is not admin', async () => {
-            const userRepository = getRepository(Users);
-
-            const data = {
-                name: 'Luiz',
-                surname: 'Sousa Lemos',
-                email: 'luizpedrosousa64@gmail.com',
-                password: '1234',
-                image: { path: '' }
-            };
-
-            const user = userRepository.create(data);
-
-            await userRepository.save(user);
+            const user = UserFactory.build({ status: false });
+            await UserFactory.create(user);
+            const { email, password } = user;
 
             const res = await req(app)
                 .get('/users/auth')
                 .send({
-                    email: user.email,
-                    password: data.password
+                    email,
+                    password
                 });
 
             expect(res.status).toBe(401);
@@ -168,26 +112,15 @@ describe('/users', () => {
         });
 
         it('should return a jwt, when users authenticate with valid credentials', async () => {
-            const userRepository = getRepository(Users);
-
-            const data = {
-                status: true,
-                name: 'Luiz',
-                surname: 'Sousa Lemos',
-                email: 'luizpedrosousa64@gmail.com',
-                password: '1234',
-                image: { path: '' }
-            };
-
-            const user = userRepository.create(data);
-
-            await userRepository.save(user);
+            const user = UserFactory.build();
+            await UserFactory.create(user);
+            const { email, password } = user;
 
             const res = await req(app)
                 .get('/users/auth')
                 .send({
-                    email: 'luizpedrosousa64@gmail.com',
-                    password: '1234'
+                    email,
+                    password
                 });
 
             expect(res.body).toHaveProperty('token');
