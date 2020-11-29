@@ -5,35 +5,38 @@ import jwt from 'jsonwebtoken';
 export default (req: Request, res: Response, next: NextFunction) => {
     const { authorization } = req.headers;
 
-    if (!authorization)
+    if (!authorization) {
         return res.status(400).json({
-            error: 'No token provider',
+            error: 'No token provider'
         });
+    }
 
     const parts = authorization.split(' ');
 
-    if (parts.length < 2)
+    if (parts.length < 2) {
         return res.status(400).json({
-            error: 'Token error',
+            error: 'Token error'
         });
+    }
 
     const [scheme, token] = parts;
 
-    if (!/^Bearer$/i.test(scheme))
+    if (!/^Bearer$/i.test(scheme)) {
         return res.status(400).json({
-            error: 'Token malformated',
+            error: 'Token malformated'
         });
+    }
 
-    const PublicKey = JSON.stringify(process.env.PUBLIC_KEY?.replace(/\\n/g, '\n'))
+    const PublicKey = JSON.stringify(process.env.PUBLIC_KEY?.replace(/\\n/g, '\n'));
 
     jwt.verify(token, JSON.parse(PublicKey), (err: any, decoded: any) => {
-        if (err)
+        if (err) {
             return res.status(400).json({
-                error: 'Invalid Token',
+                error: 'Invalid token'
             });
+        }
 
         req.userId = decoded.id;
         return next();
     });
-
-}
+};

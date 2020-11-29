@@ -126,4 +126,77 @@ describe('/users', () => {
             expect(res.body).toHaveProperty('token');
         });
     });
+
+    describe('Access private routes', () => {
+        it('should return a 201 status, when users try to access a private route with a valid token', async () => {
+            const user = UserFactory.build();
+            await UserFactory.create(user);
+
+            const { email, password } = user;
+
+            const { body } = await req(app)
+                .get('/users/auth')
+                .send({ email, password });
+
+            const res = await req(app)
+                .get('/users/admin/show')
+                .set('Authorization', `Bearer ${body.token}`);
+
+            expect(res.status).toBe(201);
+        });
+
+        it('should return a 400 status, when users try to access a private route without a token', async () => {
+            const res = await req(app)
+                .get('/users/admin/show');
+
+            expect(res.status).toBe(400);
+            expect(res.body).toHaveProperty('error', 'No token provider');
+        });
+
+        it('should return a token error, when users try to access a private route with a bad token', async () => {
+            const user = UserFactory.build();
+            await UserFactory.create(user);
+
+            const { email, password } = user;
+
+            const { body } = await req(app)
+                .get('/users/auth')
+                .send({
+                    email,
+                    password
+                });
+            const res = await req(app)
+                .get('/users/admin/show')
+                .set('Authorization', `Bearer${body.token}`);
+
+            expect(res.status).toBe(400);
+            expect(res.body).toHaveProperty('error', 'Token error');
+        });
+
+        it('should return a token error, when users try to access a private route with a malformed token', async () => {
+            const user = UserFactory.build();
+            const { email, password } = user;
+            await UserFactory.create(user);
+
+            const { body } = await req(app)
+                .get('/users/auth')
+                .send({ email, password });
+
+            const res = await req(app)
+                .get('/users/admin/show')
+                .set('Authorization', `bearrer ${body.token}`);
+
+            expect(res.status).toBe(400);
+            expect(res.body).toHaveProperty('error', 'Token malformated');
+        });
+
+        it('should return a token error, when users try to access a private route with a invalid token', async () => {
+            const res = await req(app)
+                .get('/users/admin/show')
+                .set('Authorization', 'Bearer 1234');
+
+            expect(res.status).toBe(400);
+            expect(res.body).toHaveProperty('error', 'Invalid token');
+        });
+    });
 });
