@@ -21,6 +21,11 @@ export const UserFactory = new Factory(Users)
     .sequence('password', () => String(faker.internet.password()))
     .sequence('image', () => Object({ path: '' }));
 
+export const UserUpdateFactory = new Factory(Users)
+    .sequence('name', () => faker.name.firstName())
+    .sequence('surname', () => faker.name.lastName())
+    .sequence('email', () => faker.internet.email());
+
 export const UserUnitFactory = {
     name: 'Luiz',
     surname: 'Pedro',

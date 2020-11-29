@@ -3,7 +3,12 @@ import nodemailer from 'nodemailer';
 import hbs from 'nodemailer-express-handlebars';
 
 import * as dotenv from 'dotenv';
-dotenv.config();
+
+dotenv.config({
+    path: process.env.NODE_ENV === 'test'
+        ? path.join(__dirname, '..', '..', './test.env')
+        : path.join(__dirname, '..', '..', './dev.env')
+});
 
 export const transport = nodemailer.createTransport({
     host: process.env.NODEMAILER_HOST,

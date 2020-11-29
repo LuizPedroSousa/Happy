@@ -18,6 +18,7 @@ export interface IMail {
 class UserController {
     async create (req: Request, res: Response) {
         const {
+            status,
             name,
             surname,
             email,
@@ -30,7 +31,7 @@ class UserController {
 
         const image = reqImage ? { path: reqImage.filename } : { path: '' };
         const data = {
-            status: true,
+            status: status === 'true',
             name,
             surname,
             email,
@@ -144,15 +145,11 @@ class UserController {
 
         const user = await userRepository.findOneOrFail(payload, { relations: ['image'] });
 
-        const reqFile = req.files as Express.Multer.File[];
-
-        const { path } = reqFile.map(img => {
-            return { path: img.filename };
-        })[0] || [];
+        const reqFile = req.file as Express.Multer.File;
 
         const image = {
             id: user.image.id,
-            path: path || user.image.path
+            path: reqFile ? reqFile.filename : user.image.path
         };
 
         const data = {
@@ -166,8 +163,10 @@ class UserController {
         const schema = Yup.object().shape({
             name: Yup.string().required(),
             surname: Yup.string().required(),
-            email: Yup.string().required().email()
-
+            email: Yup.string().required().email(),
+            image: Yup.object().shape({
+                path: Yup.string().required()
+            })
         });
 
         await schema.validate(data, {

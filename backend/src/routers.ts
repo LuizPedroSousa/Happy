@@ -24,7 +24,7 @@ Routes.get('/users/auth', UserController.auth);
 Routes.get('/users/admin/show', auth, UserController.show);
 Routes.put('/users/admin/update', auth, uploadUser.array('image'), UserController.update);
 
-// User admin
+// User admin actions
 Routes.get('/users/admin', auth, UserActionsController.index);
 Routes.put('/users/admin/accept/:id', auth, UserActionsController.acceptUser);
 Routes.delete('/users/admin/reject/:id', auth, UserActionsController.rejectUser);

@@ -1,11 +1,12 @@
+/* eslint-disable no-undef */
 import { createConnection } from 'typeorm';
 import app from '../../src/app';
 import req from 'supertest';
 import clearData from '../Utils/clearData';
 import path from 'path';
-import { UserFactory } from '../Utils/factories';
-/* eslint-disable no-undef */
-const imageFile = path.join(__dirname, '..', './Images', '/personal-user-illustration-@2x.png');
+import { UserFactory, UserUpdateFactory } from '../Utils/factories';
+const userImage = path.join(__dirname, '..', './Images', '/personal-user-illustration-@2x.png');
+const updatedUserImage = path.join(__dirname, '..', './Images', '/update_profile.jpg');
 beforeAll(async () => {
     await createConnection();
 });
@@ -44,7 +45,7 @@ describe('/users', () => {
             const res = await req(app)
                 .post('/users/create')
                 .field(JSON.parse(user))
-                .attach('image', imageFile);
+                .attach('image', userImage);
 
             expect(res.status).toBe(201);
         });
@@ -197,6 +198,87 @@ describe('/users', () => {
 
             expect(res.status).toBe(400);
             expect(res.body).toHaveProperty('error', 'Invalid token');
+        });
+    });
+
+    describe('Update', () => {
+        it('should return a 201 status, when updating user with valid credentials', async () => {
+            const user = UserFactory.build();
+            await UserFactory.create(user);
+
+            const { email, password } = user;
+
+            const { body } = await req(app)
+                .get('/users/auth')
+                .send({ email, password });
+
+            const userUpdated = JSON.stringify(UserUpdateFactory.build());
+
+            const res = await req(app)
+                .put('/users/admin/update')
+                .set('Authorization', `Bearer ${body.token}`)
+                .field(JSON.parse(userUpdated))
+                .attach('image', updatedUserImage);
+
+            expect(res.status).toBe(201);
+        });
+
+        it('should return a 400 status, when updating user data with invalid credentials', async () => {
+            const user = UserFactory.build();
+            await UserFactory.create(user);
+
+            const { email, password } = user;
+
+            const { body } = await req(app)
+                .get('/users/auth')
+                .send({ email, password });
+
+            const userUpdated = UserUpdateFactory.build({
+                email: 'luizpedrosousagmail.com'
+            });
+
+            const res = await req(app)
+                .put('/users/admin/update')
+                .set('Authorization', `Bearer ${body.token}`)
+                .send(userUpdated);
+
+            expect(res.status).toBe(400);
+            expect(res.body).toHaveProperty('error', 'Validations errors');
+        });
+        it('should return a status 201, when the user only updates the profile image', async () => {
+            const user = UserFactory.build();
+            await UserFactory.create(user);
+
+            const { email, password } = user;
+
+            const { body } = await req(app)
+                .get('/users/auth')
+                .send({ email, password });
+
+            const res = await req(app)
+                .put('/users/admin/update')
+                .set('Authorization', `Bearer ${body.token}`)
+                .attach('image', updatedUserImage);
+            expect(res.status).toBe(201);
+        });
+
+        it('should return a status 201, when the user only updates the data', async () => {
+            const user = UserFactory.build();
+            await UserFactory.create(user);
+
+            const { email, password } = user;
+            const { body } = await req(app)
+                .get('/users/auth')
+                .send({ email, password });
+
+            const userUpdated = JSON.stringify(UserUpdateFactory.build());
+
+            const res = await req(app)
+                .put('/users/admin/update')
+                .set('Authorization', `Bearer ${body.token}`)
+                .field(JSON.parse(userUpdated));
+
+            expect(res.status).toBe(201);
         });
     });
 });
