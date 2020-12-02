@@ -2,6 +2,17 @@ import { Factory } from 'typeorm-factory';
 import Orphanage from '../../src/Models/Orphanages';
 import faker from 'faker';
 import Users from '../../src/Models/Users';
+import UserImages from '../../src/Models/Users_Images';
+
+interface IUserFactoryOptions {
+    status?: boolean;
+    name?: string;
+    surname?: string;
+    email?: string;
+    password?: string;
+    hasSendImage?:boolean;
+    image?: UserImages
+}
 
 export const OrphanageFactory = new Factory(Orphanage)
     .sequence('name', () => `${faker.address.streetAddress()}`)
@@ -25,6 +36,14 @@ export const UserUpdateFactory = new Factory(Users)
     .sequence('name', () => faker.name.firstName())
     .sequence('surname', () => faker.name.lastName())
     .sequence('email', () => faker.internet.email());
+
+export const UserFactoryCreate = async (options?: IUserFactoryOptions) => {
+    const create = await UserFactory.create(UserFactory.build({ ...options }));
+    return {
+        ...create,
+        token: create.generateToken()
+    };
+};
 
 export const UserUnitFactory = {
     name: 'Luiz',

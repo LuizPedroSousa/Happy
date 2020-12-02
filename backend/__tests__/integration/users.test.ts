@@ -4,7 +4,7 @@ import app from '../../src/app';
 import req from 'supertest';
 import clearData from '../Utils/clearData';
 import path from 'path';
-import { UserFactory, UserUpdateFactory } from '../Utils/factories';
+import { UserFactory, UserFactoryCreate, UserUpdateFactory } from '../Utils/factories';
 const userImage = path.join(__dirname, '..', './Images', '/personal-user-illustration-@2x.png');
 const updatedUserImage = path.join(__dirname, '..', './Images', '/update_profile.jpg');
 beforeAll(async () => {
@@ -14,13 +14,14 @@ beforeAll(async () => {
 beforeEach(async () => {
     await clearData();
 });
-describe('/users', () => {
+describe('User profile actions', () => {
     describe('Create', () => {
         it('should return a status 201 when creating an account with valid credentials', async () => {
             const user = UserFactory.build();
 
             const res = await req(app)
                 .post('/users/create')
+                .expect('Content-Type', 'application/json; charset=utf-8')
                 .send(user);
 
             expect(res.status).toBe(201);
@@ -34,6 +35,7 @@ describe('/users', () => {
 
             const res = await req(app)
                 .post('/users/create')
+                .expect('Content-Type', 'application/json; charset=utf-8')
                 .send(user);
 
             expect(res.status).toBe(400);
@@ -42,8 +44,10 @@ describe('/users', () => {
 
         it('should return a 201 status when creating an account with a user image', async () => {
             const user = JSON.stringify(UserFactory.build({ image: undefined }));
+
             const res = await req(app)
                 .post('/users/create')
+                .expect('Content-Type', 'application/json; charset=utf-8')
                 .field(JSON.parse(user))
                 .attach('image', userImage);
 
@@ -51,27 +55,29 @@ describe('/users', () => {
         });
     });
     describe('Authenticate', () => {
-        it('should return a status 201, when users authenticate with valid credentials', async () => {
-            const user = UserFactory.build();
-            await UserFactory.create(user);
-            const { email, password } = user;
+        it('should return a status 201 and a jwt, when users authenticate with valid credentials', async () => {
+            const { email, password } = UserFactory.build();
+            await UserFactoryCreate({ email, password });
 
             const res = await req(app)
                 .get('/users/auth')
+                .expect('Content-Type', 'application/json; charset=utf-8')
                 .send({
                     email,
                     password
                 });
+
             expect(res.status).toBe(201);
+            expect(res.body).toHaveProperty('token');
         });
 
         it('should return a 401 status, when the user email is invalid', async () => {
-            const user = UserFactory.build();
-            const { password } = user;
-            await UserFactory.create(user);
+            const { password } = UserFactory.build();
+            await UserFactoryCreate({ password });
 
             const res = await req(app)
                 .get('/users/auth')
+                .expect('Content-Type', 'application/json; charset=utf-8')
                 .send({
                     email: 'luizpedrosousa65gmail.com',
                     password
@@ -82,11 +88,11 @@ describe('/users', () => {
         });
 
         it('should return a 401 status, when the user password is invalid', async () => {
-            const user = UserFactory.build();
-            const { email } = await UserFactory.create(user);
+            const { email } = await UserFactoryCreate();
 
             const res = await req(app)
                 .get('/users/auth')
+                .expect('Content-Type', 'application/json; charset=utf-8')
                 .send({
                     email,
                     password: '2316'
@@ -97,12 +103,12 @@ describe('/users', () => {
         });
 
         it('should return a 401 status, when the user is not admin', async () => {
-            const user = UserFactory.build({ status: false });
-            await UserFactory.create(user);
-            const { email, password } = user;
+            const { email, password } = UserFactory.build();
+            await UserFactoryCreate({ email, password, status: false });
 
             const res = await req(app)
                 .get('/users/auth')
+                .expect('Content-Type', 'application/json; charset=utf-8')
                 .send({
                     email,
                     password
@@ -111,89 +117,53 @@ describe('/users', () => {
             expect(res.status).toBe(401);
             expect(res.body).toHaveProperty('error', 'your account is being reviewed by one of our admins');
         });
-
-        it('should return a jwt, when users authenticate with valid credentials', async () => {
-            const user = UserFactory.build();
-            await UserFactory.create(user);
-            const { email, password } = user;
-
-            const res = await req(app)
-                .get('/users/auth')
-                .send({
-                    email,
-                    password
-                });
-
-            expect(res.body).toHaveProperty('token');
-        });
     });
 
     describe('Access private routes', () => {
         it('should return a 201 status, when users try to access a private route with a valid token', async () => {
-            const user = UserFactory.build();
-            await UserFactory.create(user);
-
-            const { email, password } = user;
-
-            const { body } = await req(app)
-                .get('/users/auth')
-                .send({ email, password });
+            const { token } = await UserFactoryCreate();
 
             const res = await req(app)
                 .get('/users/admin/show')
-                .set('Authorization', `Bearer ${body.token}`);
+                .expect('Content-Type', 'application/json; charset=utf-8')
+                .set('Authorization', `Bearer ${token}`);
 
             expect(res.status).toBe(201);
         });
 
-        it('should return a 400 status, when users try to access a private route without a token', async () => {
+        it('should return a token error and a 400 status, when users try to access a private route without a token', async () => {
             const res = await req(app)
-                .get('/users/admin/show');
+                .get('/users/admin/show')
+                .expect('Content-Type', 'application/json; charset=utf-8');
 
             expect(res.status).toBe(400);
             expect(res.body).toHaveProperty('error', 'No token provider');
         });
 
-        it('should return a token error, when users try to access a private route with a bad token', async () => {
-            const user = UserFactory.build();
-            await UserFactory.create(user);
-
-            const { email, password } = user;
-
-            const { body } = await req(app)
-                .get('/users/auth')
-                .send({
-                    email,
-                    password
-                });
+        it('should return a token error and a 400 status, when users try to access a private route with a bad token', async () => {
             const res = await req(app)
                 .get('/users/admin/show')
-                .set('Authorization', `Bearer${body.token}`);
+                .expect('Content-Type', 'application/json; charset=utf-8')
+                .set('Authorization', 'Bearer1234');
 
             expect(res.status).toBe(400);
             expect(res.body).toHaveProperty('error', 'Token error');
         });
 
-        it('should return a token error, when users try to access a private route with a malformed token', async () => {
-            const user = UserFactory.build();
-            const { email, password } = user;
-            await UserFactory.create(user);
-
-            const { body } = await req(app)
-                .get('/users/auth')
-                .send({ email, password });
-
+        it('should return a token error and a 400 status, when users try to access a private route with a malformed token', async () => {
             const res = await req(app)
                 .get('/users/admin/show')
-                .set('Authorization', `bearrer ${body.token}`);
+                .expect('Content-Type', 'application/json; charset=utf-8')
+                .set('Authorization', 'bearrer 1234');
 
             expect(res.status).toBe(400);
             expect(res.body).toHaveProperty('error', 'Token malformated');
         });
 
-        it('should return a token error, when users try to access a private route with a invalid token', async () => {
+        it('should return a token error and a 400 status, when users try to access a private route with a invalid token', async () => {
             const res = await req(app)
                 .get('/users/admin/show')
+                .expect('Content-Type', 'application/json; charset=utf-8')
                 .set('Authorization', 'Bearer 1234');
 
             expect(res.status).toBe(400);
@@ -203,35 +173,43 @@ describe('/users', () => {
 
     describe('Update', () => {
         it('should return a 201 status, when updating user with valid credentials', async () => {
-            const user = UserFactory.build();
-            await UserFactory.create(user);
-
-            const { email, password } = user;
-
-            const { body } = await req(app)
-                .get('/users/auth')
-                .send({ email, password });
-
+            const { token } = await UserFactoryCreate();
             const userUpdated = JSON.stringify(UserUpdateFactory.build());
 
             const res = await req(app)
                 .put('/users/admin/update')
-                .set('Authorization', `Bearer ${body.token}`)
+                .expect('Content-Type', 'application/json; charset=utf-8')
+                .set('Authorization', `Bearer ${token}`)
                 .field(JSON.parse(userUpdated))
                 .attach('image', updatedUserImage);
 
             expect(res.status).toBe(201);
         });
 
+        it('should return a status 201, when the user only updates the profile image', async () => {
+            const { token } = await UserFactoryCreate();
+
+            const res = await req(app)
+                .put('/users/admin/update')
+                .expect('Content-Type', 'application/json; charset=utf-8')
+                .set('Authorization', `Bearer ${token}`)
+                .attach('image', updatedUserImage);
+            expect(res.status).toBe(201);
+        });
+
+        it('should return a status 201, when the user only updates the data', async () => {
+            const { token } = await UserFactoryCreate();
+            const userUpdate = UserUpdateFactory.build();
+            const res = await req(app)
+                .put('/users/admin/update')
+                .set('Authorization', `Bearer ${token}`)
+                .send(userUpdate);
+
+            expect(res.status).toBe(201);
+        });
+
         it('should return a 400 status, when updating user data with invalid credentials', async () => {
-            const user = UserFactory.build();
-            await UserFactory.create(user);
-
-            const { email, password } = user;
-
-            const { body } = await req(app)
-                .get('/users/auth')
-                .send({ email, password });
+            const { token } = await UserFactoryCreate();
 
             const userUpdated = UserUpdateFactory.build({
                 email: 'luizpedrosousagmail.com'
@@ -239,46 +217,11 @@ describe('/users', () => {
 
             const res = await req(app)
                 .put('/users/admin/update')
-                .set('Authorization', `Bearer ${body.token}`)
+                .set('Authorization', `Bearer ${token}`)
                 .send(userUpdated);
 
             expect(res.status).toBe(400);
             expect(res.body).toHaveProperty('error', 'Validations errors');
-        });
-        it('should return a status 201, when the user only updates the profile image', async () => {
-            const user = UserFactory.build();
-            await UserFactory.create(user);
-
-            const { email, password } = user;
-
-            const { body } = await req(app)
-                .get('/users/auth')
-                .send({ email, password });
-
-            const res = await req(app)
-                .put('/users/admin/update')
-                .set('Authorization', `Bearer ${body.token}`)
-                .attach('image', updatedUserImage);
-            expect(res.status).toBe(201);
-        });
-
-        it('should return a status 201, when the user only updates the data', async () => {
-            const user = UserFactory.build();
-            await UserFactory.create(user);
-
-            const { email, password } = user;
-            const { body } = await req(app)
-                .get('/users/auth')
-                .send({ email, password });
-
-            const userUpdated = JSON.stringify(UserUpdateFactory.build());
-
-            const res = await req(app)
-                .put('/users/admin/update')
-                .set('Authorization', `Bearer ${body.token}`)
-                .field(JSON.parse(userUpdated));
-
-            expect(res.status).toBe(201);
         });
     });
 });

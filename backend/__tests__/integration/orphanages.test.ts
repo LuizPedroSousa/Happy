@@ -1,4 +1,4 @@
-import { createConnection, getConnection } from 'typeorm';
+import { createConnection } from 'typeorm';
 import clearData from '../Utils/clearData';
 import req from 'supertest';
 import app from '../../src/app';
@@ -11,10 +11,6 @@ beforeAll(async () => {
 
 beforeEach(async () => {
     await clearData();
-});
-
-afterAll(async () => {
-    await getConnection().close();
 });
 
 describe('/orphanages', () => {

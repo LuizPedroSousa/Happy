@@ -31,7 +31,7 @@ class UserController {
 
         const image = reqImage ? { path: reqImage.filename } : { path: '' };
         const data = {
-            status: status === 'true',
+            status: status === 'true' || status === true,
             name,
             surname,
             email,
