@@ -41,7 +41,7 @@ class UserActionsController {
 
         if (!user) {
             return res.status(404).json({
-                error: 'User not found'
+                error: 'Unable to resolve this action: User not found'
             });
         };
 
@@ -65,7 +65,13 @@ class UserActionsController {
 
         const userRepository = getRepository(Users);
 
-        const user = await userRepository.findOneOrFail(id, { relations: ['image'] });
+        const user = await userRepository.findOne(id, { relations: ['image'] });
+
+        if (!user) {
+            return res.status(404).json({
+                error: 'Unable to resolve this action: User not found'
+            });
+        }
 
         if (user.status) {
             return res.status(400).json({
