@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
+import { getRepository, Like, Not } from 'typeorm';
 import Users from '../Models/Users';
 import UsersView from '../Views/Users_view';
 interface IFilters{
@@ -10,20 +10,46 @@ interface IFilters{
 
 class UserActionsController {
     async index (req: Request, res: Response) {
-        const filters = req.query as IFilters;
         const usersRepository = getRepository(Users);
 
-        const users = await usersRepository.find(
-            filters
-                ? {
-                    relations: ['image'],
-                    where: filters
-                }
-                : { relations: ['image'] });
+        const payload = req.userId;
+        const filters = req.query as IFilters;
 
-        if (!users) {
+        const { name, surname } = filters;
+
+        const users = await usersRepository.find({
+            where: [
+                {
+                    id: Not(payload),
+                    ...filters
+                },
+                {
+                    id: Not(payload),
+                    ...filters,
+                    name: Like(`%${name}%`),
+                    surname: Like(`%${surname}%`)
+                },
+                {
+                    id: Not(payload),
+                    ...filters,
+                    name: Like(`%${name}%`)
+                },
+                {
+                    id: Not(payload),
+                    ...filters,
+                    surname: Like(`%${surname}%`)
+                }
+            ],
+            relations: ['image'],
+            order: {
+                createdAt: 'DESC',
+                name: 'ASC'
+            }
+        });
+
+        if (!users[0]) {
             return res.status(400).json({
-                error: 'users not found'
+                error: 'Unable to resolve this: Users not found'
             });
         }
 

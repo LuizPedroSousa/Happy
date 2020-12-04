@@ -22,7 +22,7 @@ Routes.post('/orphanages/create', uploadOrphanage.array('images'), OrphanagesCon
 Routes.post('/users/create', uploadUser.single('image'), UserController.create);
 Routes.get('/users/auth', UserController.auth);
 Routes.get('/users/admin/show', auth, UserController.show);
-Routes.put('/users/admin/update', auth, uploadUser.array('image'), UserController.update);
+Routes.put('/users/admin/update', auth, uploadUser.single('image'), UserController.update);
 
 // User admin actions
 Routes.get('/users/admin', auth, UserActionsController.index);
