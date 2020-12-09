@@ -4,6 +4,7 @@ export default {
     Render (orphanage: Orphanage) {
         return {
             id: orphanage.id,
+            status: orphanage.status,
             latitude: orphanage.latitude,
             longitude: orphanage.longitude,
             name: orphanage.name,
@@ -12,6 +13,7 @@ export default {
             instructions: orphanage.instructions,
             opening_hours: orphanage.opening_hours,
             open_on_weekends: orphanage.open_on_weekends,
+            createdAt: orphanage.createdAt,
             images: Images.RenderMany(orphanage.images, 'Orphanages')
         };
     },

@@ -8,6 +8,9 @@ export default class Orphanage {
     id: string;
 
     @Column()
+    status: boolean;
+
+    @Column()
     latitude: number;
 
     @Column()
@@ -32,6 +35,9 @@ export default class Orphanage {
     @Column()
     // tslint:disable-next-line: variable-name
     open_on_weekends: boolean;
+
+    @Column()
+    createdAt: string;
 
     @BeforeInsert()
     generateId () {

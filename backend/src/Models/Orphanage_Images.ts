@@ -1,5 +1,5 @@
 import { uuid } from 'uuidv4';
-import { Entity, Column, ManyToOne, JoinColumn, PrimaryColumn, BeforeInsert } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn, PrimaryColumn, BeforeInsert, BeforeUpdate } from 'typeorm';
 import Orphanage from './Orphanages';
 
 @Entity('orphanage_images')
@@ -17,6 +17,7 @@ export default class OrphanageImages {
     orphanage: Orphanage;
 
     @BeforeInsert()
+    @BeforeUpdate()
     generateId () {
         this.id = uuid();
     }

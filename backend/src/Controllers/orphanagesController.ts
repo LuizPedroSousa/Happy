@@ -4,20 +4,32 @@ import Orphanages from '../Models/Orphanages';
 import OrphanagesView from '../Views/Orphanages_view';
 import * as Yup from 'yup';
 
+// interface IOrphanageFilters{
+//     status?:boolean;
+//     name?: string;
+//     open_on_weekends?: boolean;
+// }
+
 class OrphanagesController {
     async index (req: Request, res: Response) {
-        const orphanagesRepository = getRepository(Orphanages);
-        const orphanage = await orphanagesRepository.find({
-            relations: ['images']
+        const orphanageRepository = getRepository(Orphanages);
+
+        const orphanage = await orphanageRepository.find({
+            where: { status: true },
+            relations: ['images'],
+            order: {
+                createdAt: 'DESC',
+                name: 'ASC'
+            }
         });
+
         if (!orphanage[0]) {
             return res.status(400).json({
-                error: 'Orphanage not found'
+                error: 'Orphanages not found'
             });
         }
 
         return res.status(201).json({
-            Status: 'Okay',
             Orphanages: OrphanagesView.RenderMany(orphanage)
         });
     }
@@ -34,7 +46,7 @@ class OrphanagesController {
             open_on_weekends
         } = req.body;
 
-        const orphanagesRepository = getRepository(Orphanages);
+        const orphanageRepository = getRepository(Orphanages);
 
         const reqImages = req.files as Express.Multer.File[];
 
@@ -76,24 +88,29 @@ class OrphanagesController {
             abortEarly: false
         });
 
-        const orphanage = orphanagesRepository.create(data);
-        await orphanagesRepository.save(orphanage);
+        const orphanage = orphanageRepository.create(data);
+        await orphanageRepository.save(orphanage);
 
         return res.status(201).json({
-            Status: 'Okay, datas inserts into orphanage table',
-            orphanage
+            Okay: 'Orphanage created with successfully',
+            orphanage: OrphanagesView.Render(orphanage)
         });
     }
 
     async show (req: Request, res: Response) {
         const { id } = req.params;
-        const orphanagesRepository = getRepository(Orphanages);
-        const orphanage = await orphanagesRepository.findOneOrFail(id, {
+        const orphanageRepository = getRepository(Orphanages);
+        const orphanage = await orphanageRepository.findOneOrFail(id, {
             relations: ['images']
         });
 
+        if (!orphanage.status) {
+            return res.status(400).json({
+                error: 'Orphanage is being reviewed by one of our admins'
+            });
+        }
+
         return res.status(201).json({
-            Status: 'Okay',
             orphanage: OrphanagesView.Render(orphanage)
         });
     }

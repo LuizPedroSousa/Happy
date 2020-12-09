@@ -1,4 +1,4 @@
-import { getRepository } from 'typeorm';
+import { getRepository, Like, Not } from 'typeorm';
 import { Request, Response, Express } from 'express';
 import Users from '../Models/Users';
 import UsersView from '../Views/Users_view';
@@ -16,6 +16,60 @@ export interface IMail {
 }
 
 class UserController {
+    async index (req: Request, res: Response) {
+        const userRepository = getRepository(Users);
+
+        const payload = req.userId;
+
+        const filters = req.query;
+
+        const { name, surname } = filters;
+
+        const users = await userRepository.find({
+            where: [
+                {
+                    id: Not(payload),
+                    ...filters,
+                    name: Like(`%${name}%`),
+                    surname: Like(`%${surname}%`),
+                    status: true
+                },
+                {
+                    id: Not(payload),
+                    ...filters,
+                    name: Like(`%${name}%`),
+                    status: true
+                },
+                {
+                    id: Not(payload),
+                    ...filters,
+                    surname: Like(`%${surname}%`),
+                    status: true
+                },
+                {
+                    id: Not(payload),
+                    status: true,
+                    ...filters
+                }
+            ],
+            relations: ['image'],
+            order: {
+                createdAt: 'DESC',
+                name: 'ASC'
+            }
+        });
+
+        if (!users[0]) {
+            return res.status(400).json({
+                error: 'Unable to resolve this: Users not found'
+            });
+        }
+
+        return res.status(201).json({
+            users: UsersView.renderMany(users)
+        });
+    }
+
     async create (req: Request, res: Response) {
         const {
             status,

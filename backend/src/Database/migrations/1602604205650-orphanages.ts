@@ -16,6 +16,11 @@ export class orphanages1602604205650 implements MigrationInterface {
                     type: 'varchar'
                 },
                 {
+                    name: 'status',
+                    type: 'boolean',
+                    default: false
+                },
+                {
                     name: 'latitude',
                     type: 'decimal',
                     precision: 10,
@@ -49,6 +54,11 @@ export class orphanages1602604205650 implements MigrationInterface {
                     name: 'open_on_weekends',
                     type: 'boolean',
                     default: false
+                },
+                {
+                    name: 'createdAt',
+                    type: 'timestamp',
+                    default: 'CURRENT_TIMESTAMP'
                 }
             ]
         }));
