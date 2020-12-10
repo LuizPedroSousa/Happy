@@ -30,6 +30,7 @@ describe('/orphanages', () => {
             });
             const res = await req(app)
                 .post('/orphanages/create')
+                .expect('Content-Type', 'application/json; charset=utf-8')
                 .send(orphanage);
 
             expect(res.status).toBe(400);
@@ -40,9 +41,9 @@ describe('/orphanages', () => {
     describe('Index', () => {
         it('should return a status 201, when all orphanages are found', async () => {
             await OrphanageFactory.create();
-
             const res = await req(app)
-                .get('/orphanages');
+                .get('/orphanages')
+                .expect('Content-Type', 'application/json; charset=utf-8');
 
             expect(res.status).toBe(201);
             expect(res.body).toHaveProperty('Orphanages');
@@ -50,7 +51,8 @@ describe('/orphanages', () => {
 
         it('should return a status 400, when no orphanages is found', async () => {
             const res = await req(app)
-                .get('/orphanages');
+                .get('/orphanages')
+                .expect('Content-Type', 'application/json; charset=utf-8');
 
             expect(res.status).toBe(400);
         });
@@ -61,7 +63,8 @@ describe('/orphanages', () => {
             const orphanage = await OrphanageFactory.create();
 
             const res = await req(app)
-                .get(`/orphanages/show/${orphanage.id}`);
+                .get(`/orphanages/show/${orphanage.id}`)
+                .expect('Content-Type', 'application/json; charset=utf-8');
 
             expect(res.status).toBe(201);
             expect(res.body).toHaveProperty('orphanage');
@@ -69,7 +72,8 @@ describe('/orphanages', () => {
 
         it('should return a status 500, when the orphanage with the reference id is not found', async () => {
             const res = await req(app)
-                .get('/orphanages/show/1234');
+                .get('/orphanages/show/1234')
+                .expect('Content-Type', 'application/json; charset=utf-8');
 
             expect(res.status).toBe(500);
         });

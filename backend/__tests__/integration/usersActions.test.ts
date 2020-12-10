@@ -1,10 +1,11 @@
 /* eslint-disable no-undef */
-import { UserFactoryCreate } from '../Utils/factories';
+import { OrphanageFactory, UserFactoryCreate } from '../Utils/factories';
 import req from 'supertest';
 import app from '../../src/app';
 import { createConnection } from 'typeorm';
 import clearData from '../Utils/clearData';
-
+import path from 'path';
+const orphanageImage = path.join(__dirname, '..', './Images', '/Orphanages', '/orfanato.jpg');
 beforeAll(async () => {
     await createConnection();
 });
@@ -14,197 +15,228 @@ beforeEach(async () => {
 });
 
 describe('Users admin actions', () => {
-    describe('Index', () => {
-        it('should return a status 201, when find all users without a query', async () => {
-            const { token } = await UserFactoryCreate();
-            await UserFactoryCreate({ status: false });
-            await UserFactoryCreate({ status: false });
-            const res = await req(app)
-                .get('/users/admin')
-                .expect('Content-Type', 'application/json; charset=utf-8')
-                .set('Authorization', `Bearer ${token}`);
-
-            expect(res.status).toBe(201);
-            expect(res.body.users).toHaveLength(2);
-        });
-
-        it('should return a status 400, when not found any users without a query', async () => {
-            const { token } = await UserFactoryCreate();
-
-            const res = await req(app)
-                .get('/users/admin')
-                .expect('Content-Type', 'application/json; charset=utf-8')
-                .set('Authorization', `Bearer ${token}`);
-
-            expect(res.status).toBe(400);
-            expect(res.body).toHaveProperty('error', 'Unable to resolve this: Users not found');
-        });
-
-        it('should return a status 201, when find user with a full query', async () => {
-            const { token } = await UserFactoryCreate();
-
-            const { name, surname } = await UserFactoryCreate({ status: false });
-
-            const res = await req(app)
-                .get('/users/admin')
-                .expect('Content-Type', 'application/json; charset=utf-8')
-                .query({
-                    status: false,
-                    name: name.substr(0, 1), // test SQL operator Like
-                    surname: surname.substr(0, 3)// test SQL operator Like
-                })
-                .set('Authorization', `Bearer ${token}`);
-
-            expect(res.status).toBe(201);
-        });
-
-        it('should return a status 400, when not found any users with a full query', async () => {
-            const { token } = await UserFactoryCreate();
-
-            const res = await req(app)
-                .get('/users/admin')
-                .expect('Content-Type', 'application/json; charset=utf-8')
-                .query({
-                    status: false,
-                    name: 'Luiz',
-                    surname: 'Pedro'
-                })
-                .set('Authorization', `Bearer ${token}`);
-
-            expect(res.status).toBe(400);
-            expect(res.body).toHaveProperty('error', 'Unable to resolve this: Users not found');
-        });
-
-        it('should return a status 201, when find user with query by name', async () => {
-            const { token } = await UserFactoryCreate();
-
-            const { name } = await UserFactoryCreate();
-
-            const res = await req(app)
-                .get('/users/admin')
-                .expect('Content-Type', 'application/json; charset=utf-8')
-                .query({ name: name.substr(0, 2) })// test SQL operator Like
-                .set('Authorization', `Bearer ${token}`);
-
-            expect(res.status).toBe(201);
-        });
-
-        it('should return a status 400, when not found any users with a query by name', async () => {
-            const { token } = await UserFactoryCreate();
-
-            const res = await req(app)
-                .get('/users/admin')
-                .expect('Content-Type', 'application/json; charset=utf-8')
-                .query({
-                    name: 'Luiz'
-                })
-                .set('Authorization', `Bearer ${token}`);
-
-            expect(res.status).toBe(400);
-            expect(res.body).toHaveProperty('error', 'Unable to resolve this: Users not found');
-        });
-
-        it('should return a status 201, when find user with a query by surname', async () => {
-            const { token } = await UserFactoryCreate();
-
-            const { surname } = await UserFactoryCreate();
-
-            const res = await req(app)
-                .get('/users/admin')
-                .expect('Content-Type', 'application/json; charset=utf-8')
-                .query({ surname: surname.substr(0, 4) }) // test SQL operator Like
-                .set('Authorization', `Bearer ${token}`);
-
-            expect(res.status).toBe(201);
-        });
-
-        it('should return a status 400, when not found any users with a query by surname', async () => {
-            const { token } = await UserFactoryCreate();
-
-            const res = await req(app)
-                .get('/users/admin')
-                .expect('Content-Type', 'application/json; charset=utf-8')
-                .query({
-                    surname: 'Pedro'
-                })
-                .set('Authorization', `Bearer ${token}`);
-
-            expect(res.status).toBe(400);
-            expect(res.body).toHaveProperty('error', 'Unable to resolve this: Users not found');
-        });
-    });
-
-    describe('Accept', () => {
-        it('should return a status 201, when accept user with a valid id', async () => {
+    describe('Accept pending users', () => {
+        it('should return a status 201, when try to accept a user with a valid id', async () => {
             const { token } = await UserFactoryCreate();
             const { id } = await UserFactoryCreate({ status: false });
 
             const res = await req(app)
-                .put(`/users/admin/accept/${id}`)
+                .put(`/users/admin/accept/user/${id}`)
                 .expect('Content-Type', 'application/json; charset=utf-8')
                 .set('Authorization', `Bearer ${token}`);
 
             expect(res.status).toBe(201);
         });
 
-        it('should return a status 404, when user id is invalid', async () => {
+        it('should return a status 404, when try to accept a user with an invalid id', async () => {
             const { token } = await UserFactoryCreate();
 
             const res = await req(app)
-                .put('/users/admin/accept/1234')
+                .put('/users/admin/accept/user/1234')
                 .expect('Content-Type', 'application/json; charset=utf-8')
                 .set('Authorization', `Bearer ${token}`);
 
             expect(res.status).toBe(404);
-            expect(res.body).toHaveProperty('error', 'Unable to resolve this action: User not found');
+            expect(res.body).toHaveProperty('error', 'Unable to resolve this: User not found');
         });
 
-        it('should return a status 400, when user are admin', async () => {
+        it('should return a status 400, when try to accept a user and user are admin', async () => {
             const { id, token } = await UserFactoryCreate();
             const res = await req(app)
-                .put(`/users/admin/accept/${id}`)
+                .put(`/users/admin/accept/user/${id}`)
                 .expect('Content-Type', 'application/json; charset=utf-8')
                 .set('Authorization', `Bearer ${token}`);
 
             expect(res.status).toBe(400);
-            expect(res.body).toHaveProperty('error', 'You dont complete this: user are admin');
+            expect(res.body).toHaveProperty('error', 'Unable to resolve this: User are admin');
         });
     });
 
-    describe('Reject', () => {
-        it('should return a status 201, when reject user with a valid id', async () => {
+    describe('Reject pending users', () => {
+        it('should return a status 201, when try to reject a user with a valid id', async () => {
             const { token } = await UserFactoryCreate();
             const { id } = await UserFactoryCreate({ status: false });
 
             const res = await req(app)
-                .delete(`/users/admin/reject/${id}`)
+                .delete(`/users/admin/reject/user/${id}`)
                 .expect('Content-Type', 'application/json; charset=utf-8')
                 .set('Authorization', `Bearer ${token}`);
 
             expect(res.status).toBe(201);
+            expect(res.body).toHaveProperty('Okay', 'User rejected with successfully');
         });
 
-        it('should return a status 404, when user id is invalid', async () => {
+        it('should return a status 404, when try to reject a user with an invalid id', async () => {
             const { token } = await UserFactoryCreate();
 
             const res = await req(app)
-                .delete('/users/admin/reject/1234')
+                .delete('/users/admin/reject/user/1234')
                 .expect('Content-Type', 'application/json; charset=utf-8')
                 .set('Authorization', `Bearer ${token}`);
 
             expect(res.status).toBe(404);
-            expect(res.body).toHaveProperty('error', 'Unable to resolve this action: User not found');
+            expect(res.body).toHaveProperty('error', 'Unable to resolve this: User not found');
         });
 
-        it('should return a status 400, when user are admin', async () => {
+        it('should return a status 400, when try to reject a user and user are admin', async () => {
             const { id, token } = await UserFactoryCreate();
             const res = await req(app)
-                .delete(`/users/admin/reject/${id}`)
+                .delete(`/users/admin/reject/user/${id}`)
                 .expect('Content-Type', 'application/json; charset=utf-8')
                 .set('Authorization', `Bearer ${token}`);
 
             expect(res.status).toBe(400);
-            expect(res.body).toHaveProperty('error', 'You dont complete this: user are admin');
+            expect(res.body).toHaveProperty('error', 'Unable to resolve this: User are admin');
+        });
+    });
+
+    describe('Accept pending orphanages', () => {
+        it('should return a status 201, when try to accept an orphanage with a valid id', async () => {
+            const { token } = await UserFactoryCreate();
+            const { id } = await OrphanageFactory.create({ status: false });
+
+            const res = await req(app)
+                .put(`/users/admin/accept/orphanage/${id}`)
+                .expect('Content-Type', 'application/json; charset=utf-8')
+                .set('Authorization', `Bearer ${token}`);
+
+            expect(res.status).toBe(201);
+            expect(res.body.orphanage).toHaveProperty('status', true);
+        });
+
+        it('should return a status 404, when try to accept an orphanage with an invalid id', async () => {
+            const { token } = await UserFactoryCreate();
+
+            const res = await req(app)
+                .put('/users/admin/accept/orphanage/1234')
+                .expect('Content-Type', 'application/json; charset=utf-8')
+                .set('Authorization', `Bearer ${token}`);
+
+            expect(res.status).toBe(404);
+            expect(res.body).toHaveProperty('error', 'Unable to resolve this: Orphanage not found');
+        });
+
+        it('should return a status 400, when try to accept an orphanage and orphanage is already accepted', async () => {
+            const { token } = await UserFactoryCreate();
+            const { id } = await OrphanageFactory.create();
+            const res = await req(app)
+                .put(`/users/admin/accept/orphanage/${id}`)
+                .expect('Content-Type', 'application/json; charset=utf-8')
+                .set('Authorization', `Bearer ${token}`);
+
+            expect(res.status).toBe(400);
+            expect(res.body).toHaveProperty('error', 'Unable to resolve this: Orphanage is already accepted');
+        });
+    });
+
+    describe('Reject pending orphanage', () => {
+        it('should return a status 201, when try to reject an orphanage with a valid id', async () => {
+            const { token } = await UserFactoryCreate();
+            const { id } = await OrphanageFactory.create({ status: false });
+
+            const res = await req(app)
+                .delete(`/users/admin/reject/orphanage/${id}`)
+                .expect('Content-Type', 'application/json; charset=utf-8')
+                .set('Authorization', `Bearer ${token}`);
+
+            expect(res.status).toBe(201);
+            expect(res.body).toHaveProperty('Okay', 'Orphanage rejected with successfully');
+        });
+
+        it('should return a status 404, when try to reject an orphanage with an invalid id', async () => {
+            const { token } = await UserFactoryCreate();
+
+            const res = await req(app)
+                .delete('/users/admin/reject/orphanage/1234')
+                .expect('Content-Type', 'application/json; charset=utf-8')
+                .set('Authorization', `Bearer ${token}`);
+
+            expect(res.status).toBe(404);
+            expect(res.body).toHaveProperty('error', 'Unable to resolve this: Orphanage not found');
+        });
+
+        it('should return a status 400, when try to reject an orphanage and orphanage is already accepted', async () => {
+            const { token } = await UserFactoryCreate();
+            const { id } = await OrphanageFactory.create();
+            const res = await req(app)
+                .delete(`/users/admin/reject/orphanage/${id}`)
+                .expect('Content-Type', 'application/json; charset=utf-8')
+                .set('Authorization', `Bearer ${token}`);
+
+            expect(res.status).toBe(400);
+            expect(res.body).toHaveProperty('error', 'Unable to resolve this: Orphanage is already accepted');
+        });
+    });
+
+    describe('Update orphanage', () => {
+        it('should return a status 201, when try to update an orphanage with a valid credentials', async () => {
+            const { token } = await UserFactoryCreate();
+            const { id } = await OrphanageFactory.create();
+            const orphanageData = JSON.stringify(OrphanageFactory.build());
+
+            const res = await req(app)
+                .put(`/users/admin/update/orphanage/${id}`)
+                .expect('Content-Type', 'application/json; charset=utf-8')
+                .set('Authorization', `Bearer ${token}`)
+                .field(JSON.parse(orphanageData))
+                .attach('images', orphanageImage);
+
+            expect(res.status).toBe(201);
+            expect(res.body).toHaveProperty('Okay', 'Orphanage updated with successfully');
+        });
+
+        it('should return a status 201, when try to update an orphanage with an only data', async () => {
+            const { token } = await UserFactoryCreate();
+            const { id } = await OrphanageFactory.create();
+            const orphanageData = JSON.stringify(OrphanageFactory.build());
+
+            const res = await req(app)
+                .put(`/users/admin/update/orphanage/${id}`)
+                .expect('Content-Type', 'application/json; charset=utf-8')
+                .set('Authorization', `Bearer ${token}`)
+                .field(JSON.parse(orphanageData));
+
+            expect(res.status).toBe(201);
+            expect(res.body).toHaveProperty('Okay', 'Orphanage updated with successfully');
+        });
+
+        it('should return a status 201, when try to update an orphanage with an only images', async () => {
+            const { token } = await UserFactoryCreate();
+            const { id } = await OrphanageFactory.create();
+
+            const res = await req(app)
+                .put(`/users/admin/update/orphanage/${id}`)
+                .expect('Content-Type', 'application/json; charset=utf-8')
+                .set('Authorization', `Bearer ${token}`)
+                .attach('images', orphanageImage);
+
+            expect(res.status).toBe(201);
+            expect(res.body).toHaveProperty('Okay', 'Orphanage updated with successfully');
+        });
+
+        it('should return a status 404, when try to update an orphanage with an invalid id', async () => {
+            const { token } = await UserFactoryCreate();
+
+            const res = await req(app)
+                .put('/users/admin/update/orphanage/1234')
+                .expect('Content-Type', 'application/json; charset=utf-8')
+                .set('Authorization', `Bearer ${token}`);
+
+            expect(res.status).toBe(404);
+            expect(res.body).toHaveProperty('error', 'Unable to resolve this: Orphanage not found');
+        });
+
+        it('should return a status 400, when try to update an orphanage and this orphanage is pending', async () => {
+            const { token } = await UserFactoryCreate();
+            const { id } = await OrphanageFactory.create({ status: false });
+
+            const res = await req(app)
+                .put(`/users/admin/update/orphanage/${id}`)
+                .expect('Content-Type', 'application/json; charset=utf-8')
+                .set('Authorization', `Bearer ${token}`);
+
+            expect(res.status).toBe(400);
+            expect(res.body).toHaveProperty('error', 'Unable to resolve this: Orphanage is pending');
         });
     });
 });

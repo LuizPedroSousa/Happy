@@ -4,12 +4,6 @@ import Orphanages from '../Models/Orphanages';
 import OrphanagesView from '../Views/Orphanages_view';
 import * as Yup from 'yup';
 
-// interface IOrphanageFilters{
-//     status?:boolean;
-//     name?: string;
-//     open_on_weekends?: boolean;
-// }
-
 class OrphanagesController {
     async index (req: Request, res: Response) {
         const orphanageRepository = getRepository(Orphanages);

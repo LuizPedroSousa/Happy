@@ -5,8 +5,8 @@ import req from 'supertest';
 import clearData from '../Utils/clearData';
 import path from 'path';
 import { UserFactory, UserFactoryCreate, UserUpdateFactory } from '../Utils/factories';
-const userImage = path.join(__dirname, '..', './Images', '/personal-user-illustration-@2x.png');
-const updatedUserImage = path.join(__dirname, '..', './Images', '/update_profile.jpg');
+const userImage = path.join(__dirname, '..', './Images', '/Users', '/personal-user-illustration-@2x.png');
+const updatedUserImage = path.join(__dirname, '..', './Images', '/Users', '/update_profile.jpg');
 beforeAll(async () => {
     await createConnection();
 });
@@ -15,6 +15,125 @@ beforeEach(async () => {
     await clearData();
 });
 describe('User profile actions', () => {
+    describe('Index', () => {
+        it('should return a status 201, when try to find all users', async () => {
+            const { token } = await UserFactoryCreate();
+            await UserFactoryCreate();
+            await UserFactoryCreate();
+            const res = await req(app)
+                .get('/users/admin')
+                .expect('Content-Type', 'application/json; charset=utf-8')
+                .set('Authorization', `Bearer ${token}`);
+
+            expect(res.status).toBe(201);
+            expect(res.body.users).toHaveLength(2);
+        });
+
+        it('should return a status 400, when not found any users', async () => {
+            const { token } = await UserFactoryCreate();
+
+            const res = await req(app)
+                .get('/users/admin')
+                .expect('Content-Type', 'application/json; charset=utf-8')
+                .set('Authorization', `Bearer ${token}`);
+
+            expect(res.status).toBe(400);
+            expect(res.body).toHaveProperty('error', 'Unable to resolve this: Users not found');
+        });
+
+        it('should return a status 201, when try to find a user with a full query', async () => {
+            const { token } = await UserFactoryCreate();
+
+            const { name, surname } = await UserFactoryCreate();
+
+            const res = await req(app)
+                .get('/users/admin')
+                .expect('Content-Type', 'application/json; charset=utf-8')
+                .query({
+                    status: false,
+                    name: name.substr(0, 1), // test SQL operator Like
+                    surname: surname.substr(0, 3)// test SQL operator Like
+                })
+                .set('Authorization', `Bearer ${token}`);
+
+            expect(res.status).toBe(201);
+        });
+
+        it('should return a status 400, when not found any users with a full query', async () => {
+            const { token } = await UserFactoryCreate();
+
+            const res = await req(app)
+                .get('/users/admin')
+                .expect('Content-Type', 'application/json; charset=utf-8')
+                .query({
+                    name: 'Luiz',
+                    surname: 'Pedro'
+                })
+                .set('Authorization', `Bearer ${token}`);
+
+            expect(res.status).toBe(400);
+            expect(res.body).toHaveProperty('error', 'Unable to resolve this: Users not found');
+        });
+
+        it('should return a status 201, when find a user with query by name', async () => {
+            const { token } = await UserFactoryCreate();
+
+            const { name } = await UserFactoryCreate();
+
+            const res = await req(app)
+                .get('/users/admin')
+                .expect('Content-Type', 'application/json; charset=utf-8')
+                .query({ name: name.substr(0, 2) })// test SQL operator Like
+                .set('Authorization', `Bearer ${token}`);
+
+            expect(res.status).toBe(201);
+        });
+
+        it('should return a status 400, when not found any users with a query by name', async () => {
+            const { token } = await UserFactoryCreate();
+
+            const res = await req(app)
+                .get('/users/admin')
+                .expect('Content-Type', 'application/json; charset=utf-8')
+                .query({
+                    name: 'Luiz'
+                })
+                .set('Authorization', `Bearer ${token}`);
+
+            expect(res.status).toBe(400);
+            expect(res.body).toHaveProperty('error', 'Unable to resolve this: Users not found');
+        });
+
+        it('should return a status 201, when find user with a query by surname', async () => {
+            const { token } = await UserFactoryCreate();
+
+            const { surname } = await UserFactoryCreate();
+
+            const res = await req(app)
+                .get('/users/admin')
+                .expect('Content-Type', 'application/json; charset=utf-8')
+                .query({ surname: surname.substr(0, 4) }) // test SQL operator Like
+                .set('Authorization', `Bearer ${token}`);
+
+            expect(res.status).toBe(201);
+        });
+
+        it('should return a status 400, when not found any users with a query by surname', async () => {
+            const { token } = await UserFactoryCreate();
+
+            const res = await req(app)
+                .get('/users/admin')
+                .expect('Content-Type', 'application/json; charset=utf-8')
+                .query({
+                    surname: 'Pedro'
+                })
+                .set('Authorization', `Bearer ${token}`);
+
+            expect(res.status).toBe(400);
+            expect(res.body).toHaveProperty('error', 'Unable to resolve this: Users not found');
+        });
+    });
+
     describe('Create', () => {
         it('should return a status 201 when creating an account with valid credentials', async () => {
             const user = UserFactory.build();
@@ -194,6 +313,7 @@ describe('User profile actions', () => {
                 .expect('Content-Type', 'application/json; charset=utf-8')
                 .set('Authorization', `Bearer ${token}`)
                 .attach('image', updatedUserImage);
+
             expect(res.status).toBe(201);
         });
 
