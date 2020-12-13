@@ -3,6 +3,7 @@ const dark = {
     colors: {
         black: '#333',
         white: '#fff',
+        green: '#64DB14',
         background: '#1F1F1F',
         primary: '#292929',
         primaryDark: '#12AFCB',
@@ -11,6 +12,7 @@ const dark = {
         buttonTextDark: '#15C3D6',
         buttonPrimary: '#333',
         buttonPrimaryDark: '#96FEFF',
+        buttonSecondary: '#668FFF',
         textComplement: '#8FA7B2',
         buttonForm: '#37C77F',
         outlineBase: '#DDE3F0',
@@ -18,7 +20,7 @@ const dark = {
         inputOutline: '#A1E9C5',
         boxUtilities: '#B3DAE2',
         alert: '#FF669D',
-    }
-}
+    },
+};
 
 export default dark;

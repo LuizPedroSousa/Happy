@@ -1,4 +1,7 @@
-import { useState, useEffect, Dispatch, SetStateAction } from 'react';
+import {
+    // eslint-disable-next-line no-unused-vars
+    useState, useEffect, Dispatch, SetStateAction,
+} from 'react';
 
 type Response<T> = [
     T,
@@ -8,15 +11,13 @@ type Response<T> = [
 function usePersistedState<T>(key: string, initalState: T): Response<T> {
     const [state, setState] = useState(() => {
         const storageValue = localStorage.getItem(key);
-        if (storageValue)
-            return JSON.parse(storageValue);
-        else
-            return initalState;
+        if (storageValue) return JSON.parse(storageValue);
+        return initalState;
     });
 
     useEffect(() => {
         localStorage.setItem(key, JSON.stringify(state));
-    }, [key, state])
+    }, [key, state]);
 
     return [state, setState];
 }

@@ -1,81 +1,57 @@
-import React, { useContext, CSSProperties } from 'react';
-import { ThemeContext } from 'styled-components';
-import { viewThemesContext } from '../../../Store/ContextApi/ViewThemes/context';
-import ColorsContext from '../../../Store/ContextApi/theme/context';
-import { Content } from './styles';
-
+import React, { useContext } from 'react';
+import { AiOutlineSetting } from 'react-icons/ai';
+import { BsX } from 'react-icons/bs';
+import ModalContext from '../../../Store/ContextApi/Modal/context';
 import {
-  RiMoonClearFill,
-  RiMoonLine,
-} from 'react-icons/ri';
-import { AiOutlineBgColors } from 'react-icons/ai';
-import { IoIosSunny } from 'react-icons/io';
-import { WiDaySunny } from 'react-icons/wi';
+    Content,
+    Exit,
+    ColorsIcon,
+} from './styles';
 
-const Modal: React.FC = () => {
-  //Contexts
-  const { viewThemes, setViewThemes } = useContext(viewThemesContext);
-  const { colors, title } = useContext(ThemeContext);
-  const { toggleTheme } = useContext(ColorsContext);
-  
-  //InlineStyles
-  const toggleThemeStyle: CSSProperties = {
-    padding: '5rem',
-    backgroundColor: title === 'light' ? colors.buttonPrimary : colors.black,
-  }
+import Themes from './Options/Themes';
+import Dashboard from './Options/Dashboard';
 
-  const toggleSpanStyle: CSSProperties = {
-    color: colors.white,
-  }
-  return (
-    <Content
-      style={viewThemes ? toggleThemeStyle : {}}
-      onClick={() => setViewThemes(true)}
-    >
+const Modal:React.FC = () => {
+    const {
+        viewModal,
+        viewThemes,
+        viewDashboard,
+        setViewModal,
+        handleExitModal,
+    } = useContext(ModalContext);
 
-      {
-        viewThemes
-          ?
-          <div>
-            <span
-              style={title === 'dark' ? { top: '1.3rem' } : {}}
-            >
-            </span>
-            <span
-              style={title === 'dark' ? { top: '5.1rem' } : {}}
-            >
-            </span>
-            <span
-              onClick={toggleTheme}
-              style={viewThemes ? toggleSpanStyle : {}}
-            >
-              {
-                title === 'dark'
-                  ?
-                  <RiMoonClearFill />
-                  :
-                  <RiMoonLine />
-              }
-            </span>
-            <span
-              onClick={toggleTheme}
-              style={viewThemes ? toggleSpanStyle : {}}
-            >
-              {title === 'light'
-                ?
-                < IoIosSunny />
-                :
-                <WiDaySunny />
-              }
-            </span>
-          </div>
-          :
-          <span>
-            <AiOutlineBgColors />
-          </span>
-      }
-    </Content>
-  );
+    return (
+        <Content
+            onClick={() => !viewModal && setViewModal(true)}
+            hasViewModal={viewModal}
+            hasViewThemes={viewThemes}
+            hasViewDashboard={viewDashboard}
+        >
+            {
+                viewModal
+                    ? (
+                        <>
+                            <Exit
+                                onClick={handleExitModal}
+                            >
+                                <span>
+                                    <BsX />
+                                </span>
+                            </Exit>
+                            <Themes />
+                            <Dashboard />
+                        </>
+                    )
+                    : (
+                        <ColorsIcon
+                            hasViewModal={viewModal}
+                        >
+                            <AiOutlineSetting />
+                        </ColorsIcon>
+                    )
+            }
+        </Content>
+    );
 };
 
 export default Modal;

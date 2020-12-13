@@ -1,71 +1,130 @@
-import { lighten } from 'polished';
+/* eslint-disable consistent-return */
+import { shade } from 'polished';
 import styled from 'styled-components';
 
-export const Content = styled.button`
-    cursor: pointer;
-    transition: .25s;
-    position: absolute;
-    right: 0;
-    top: 0;
-    padding: .5rem;
-    background-color:${props => props.theme.colors.buttonPrimary};
-    outline: 0;
-    border: 0;
-    border-radius: 0 0 0 1rem;
-    display:flex;
+interface IContent{
+  hasViewModal: boolean;
+  hasViewThemes: boolean;
+  hasViewDashboard: boolean;
+}
+
+interface IColorsIcon{
+  hasViewModal: boolean;
+}
+
+export const Content = styled.div<IContent>`
+  cursor: ${props => !props.hasViewModal && 'pointer'};
+  transition: .5s;
+  position: absolute;
+  overflow: hidden;
+  right: 0;
+  z-index: 1;
+  top: 0;
+  width: ${props => (props.hasViewModal ? '15rem' : '3rem')};
+  height: ${props => {
+        if (props.hasViewThemes) {
+            return '26rem';
+        }
+        if (props.hasViewDashboard) {
+            return '32rem';
+        }
+        if (props.hasViewModal) {
+            return '24rem';
+        }
+        return '3rem';
+    }};
+  padding: ${props => {
+        if (props.hasViewModal && props.hasViewThemes) {
+            return '4rem 2rem';
+        }
+        if (props.hasViewModal) {
+            return '4rem 2rem';
+        }
+        return '.5rem';
+    }};
+  background-color: ${props => (props.theme.title === 'light' ? props.theme.colors.buttonPrimary : props.theme.colors.black)};
+  border-radius: 0 0 0 1rem;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: ${props => props.hasViewModal
+    && `-.8rem 1rem 2rem ${shade(
+        0.5,
+        props.theme.title === 'dark'
+            ? props.theme.colors.black
+            : props.theme.colors.buttonPrimary,
+    )}`};
+  :hover {
+    background-color: ${props => {
+        if (!props.hasViewModal) {
+            if (props.theme.title === 'dark') {
+                return props.theme.colors.white;
+            }
+            return props.theme.colors.buttonPrimaryDark;
+        }
+    }};
+    span {
+      color: ${props => {
+        if (!props.hasViewModal) {
+            if (props.theme.title === 'dark') {
+                return props.theme.colors.black;
+            }
+            return props.theme.colors.buttonTextDark;
+        }
+    }};
+    }
+    width: ${props => !props.hasViewModal && '4rem'};
+    height: ${props => !props.hasViewModal && '4rem'};
+    box-shadow: ${props => !props.hasViewModal
+      && `-.1rem 0 2rem ${shade(
+          0.5,
+          props.theme.title === 'dark'
+              ? props.theme.colors.white
+              : props.theme.colors.buttonTextDark,
+      )}`};
+  }
+`;
+
+export const Exit = styled.button`
+  width: 4rem;
+  height: 4rem;
+  display: flex;
+  justify-content:center;
+  align-items:center;
+  position: absolute;
+  left: .5rem;
+  top: .2rem;
+  border: 0;
+  background: none;
+  transition: .25s;
+  outline:0; 
+  cursor: pointer;
+  span{
+    display: flex;
     justify-content:center;
     align-items:center;
-    div{
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items:center;
-        position: relative;
-        span:nth-child(1){
-            border-radius: .8rem;
-            background-color: ${props => props.theme.colors.buttonForm};
-            position: absolute;
-            height: 3.2rem;
-            width: 3.2rem;
-            top: 6.1rem;
-            z-index: 5;
-            :hover{
-                background-color: ${props => lighten(0.1, props.theme.colors.buttonForm)};
-            }
-        }
-        span:nth-child(2){
-            border-radius: .8rem;
-            background-color: ${props => props.theme.colors.alert};
-            height: 3.2rem;
-            width: 3.2rem;
-            position: absolute;
-            z-index: 5;
-            top: .4rem;
-            :hover{
-                background-color: ${props => lighten(0.1, props.theme.colors.alert)};
-            }
-        }
-        span{
-            padding: 1rem;
-            z-index: 10;
-            transition: .25s;
-            &+span{
-                margin: 1rem 0 0;
-            }
-            font-size: 100%;
-        }
-    }
+    font-size: 2rem;
+    color: ${props => props.theme.colors.white};
+    transition: .25s;
+  }
+
+  :hover{
     span{
-        color: ${props => props.theme.colors.white};
-        display: flex;
-        justify-content:center;
-        align-items:center;
+      color: ${props => shade(0.2, props.theme.colors.white)};
+      font-size: 3rem;
     }
-    :hover{
-        padding: 1rem;
-        span{
-            color: ${props => props.theme.title === 'light' ? props.theme.colors.buttonTextDark : props.theme.colors.black};
-        }
-        background-color: ${props => props.theme.title === 'light' ? props.theme.colors.buttonPrimaryDark : props.theme.colors.white};
-    }
+  }
+`;
+
+export const ColorsIcon = styled.span<IColorsIcon>`
+  color: ${props => (!props.hasViewModal && props.theme.title === 'dark'
+        ? props.theme.colors.white
+        : props.theme.colors.buttonText)};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  :hover {
+    color: ${props => props.theme.colors.black};
+  }
 `;

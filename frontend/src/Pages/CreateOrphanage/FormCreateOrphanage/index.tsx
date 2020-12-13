@@ -73,6 +73,7 @@ const FormCreateOrphanage: React.FC = () => {
             await api.post('/orphanages/create', data);
             return history.push('/map');
         } catch (err) {
+            console.log(err);
             return alert('Falha ao enviar dados');
         }
 

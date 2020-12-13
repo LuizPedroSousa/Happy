@@ -1,27 +1,19 @@
 import React from 'react';
-
-import {
-  Container,
-} from './styles';
-
-import Header from './Header';
-import { ViewThemesProvider, Consumer } from '../../Store/ContextApi/ViewThemes/Provider';
+import { Provider, Consumer } from '../../Store/ContextApi/Modal/provider';
+import LandingContent from './LandingContent';
 import Modal from './Modal';
-import ContentWrapper from './ContentWrapper';
-const Landing: React.FC = () => {
-  return (
-    <ViewThemesProvider>
-      <Consumer>
-        {() =>
-          <Container>
-            <Header />
-            <ContentWrapper />
-            <Modal />
-          </Container>
-        }
-      </Consumer>
-    </ViewThemesProvider>
-  );
-};
+
+const Landing: React.FC = () => (
+    <Provider>
+        <Consumer>
+            {() => (
+                <>
+                    <LandingContent />
+                    <Modal />
+                </>
+            )}
+        </Consumer>
+    </Provider>
+);
 
 export default Landing;

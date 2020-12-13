@@ -1,13 +1,18 @@
 import styled, { keyframes } from 'styled-components';
 import { bounceIn } from 'react-animations';
 
-export const HeaderContent = styled.div`
+interface HeaderContent{
+    hasViewModal: boolean;
+}
+
+const HeaderContent = styled.div<HeaderContent>`
     animation: ${keyframes`${bounceIn}`} 2s linear;
     display: flex;
     justify-content:space-between;
     align-items:center;
     transition: .25s;
     margin: 2rem 0 0;
+    opacity: ${props => (props.hasViewModal ? '10%' : 1)};
     img{
         width: 8rem;
     }
@@ -26,10 +31,12 @@ export const HeaderContent = styled.div`
         display: none;
     }
     @media(min-width: 1120px){
-        padding: 4rem 0;
+        padding: 2rem 0;
         margin: 0;
         img{
             width: 10rem;
         }
     }
 `;
+
+export default HeaderContent;

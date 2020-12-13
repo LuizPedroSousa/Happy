@@ -21,7 +21,6 @@ import markerLightIcon from '../../Assets/Images/mark_down_map.svg';
 import markerDarkIcon from '../../Assets/Images/mark_down_map_dark.svg';
 import Leaflet from 'leaflet';
 import api from '../../Services/api';
-
 interface Orphanages {
   id: number,
   latitude: number,

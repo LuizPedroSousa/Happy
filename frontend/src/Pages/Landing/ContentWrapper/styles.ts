@@ -3,12 +3,17 @@ import { bounceIn, bounceInLeft } from 'react-animations';
 import heroImg from '../../../Assets/Images/hero.svg';
 import heroDarkImg from '../../../Assets/Images/hero_dark.svg';
 
-export const Content = styled.div`
+interface IContent{
+    hasViewModal: boolean;
+}
+
+export const Content = styled.div<IContent>`
     display: flex;
     justify-content:center;
     transition: .25s;
     align-items:center;
     flex-direction: column;
+    opacity: ${props => (props.hasViewModal ? '10%' : 1)};
     h1{
         font:800 2.8rem Nunito, sans-serif;
         animation: ${keyframes`${bounceInLeft}`} 1s linear;
@@ -27,10 +32,11 @@ export const Content = styled.div`
         margin: .5rem 0;
     }
     a{
+        position: relative;
         animation: ${keyframes`${bounceIn}`} 2s linear;
         margin: 2rem 0; 
         span{
-            color: ${props => props.theme.title === 'light' ? props.theme.colors.buttonText : props.theme.colors.white};
+            color: ${props => (props.theme.title === 'light' ? props.theme.colors.buttonText : props.theme.colors.white)};
             font-size: 2.2rem;
             transition: .25s;
             display: flex;
@@ -46,9 +52,9 @@ export const Content = styled.div`
         transition: .25s;
         background-color: ${props => props.theme.colors.buttonPrimary};
         :hover{
-            background-color: ${props => props.theme.title === 'light' ? props.theme.colors.buttonPrimaryDark : props.theme.colors.white};
+            background-color: ${props => (props.theme.title === 'light' ? props.theme.colors.buttonPrimaryDark : props.theme.colors.white)};
             span{
-                color: ${props => props.theme.title === 'light' ? props.theme.colors.buttonTextDark : props.theme.colors.black};
+                color: ${props => (props.theme.title === 'light' ? props.theme.colors.buttonTextDark : props.theme.colors.black)};
             }
         }
     }
@@ -70,7 +76,6 @@ export const Content = styled.div`
             display: none;
         }
         a{
-            position: relative;
             top: 2.5rem;
         }
     }
@@ -86,7 +91,7 @@ export const ImgDesk = styled.div`
         position: absolute;
         display: flex;
         width: 100%;
-        background: url(${props => props.theme.title === 'light' ? heroImg : heroDarkImg}) no-repeat 80% center;
+        background: url(${props => (props.theme.title === 'light' ? heroImg : heroDarkImg)}) no-repeat 80% center;
         background-size: contain;
     }
 `;
