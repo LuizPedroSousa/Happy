@@ -1,6 +1,4 @@
 import styled from 'styled-components';
-import backgroundLight from '../../../Assets/Images/landing_background_light.svg';
-import backgroundDark from '../../../Assets/Images/landing_background_dark.svg';
 
 interface IContainer{
     hasViewModal:boolean;
@@ -9,9 +7,12 @@ interface IContainer{
 const Container = styled.div<IContainer>`
     height: 100vh;
     width: 100vw;
-    background-size: cover;
+    background: linear-gradient(
+        321deg,
+        ${props => props.theme.colors.secondary},
+        ${props => props.theme.colors.primary}
+    );
     transition: .25s;
-    background-image: url(${props => (props.theme.title === 'light' ? backgroundLight : backgroundDark)});
     padding: 1.4rem;
     opacity: ${props => (props.hasViewModal ? '80%' : 1)};
     @media(min-width: 1120px){

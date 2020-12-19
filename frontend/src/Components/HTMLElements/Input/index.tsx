@@ -1,35 +1,46 @@
-import React, { forwardRef, InputHTMLAttributes, useContext, useState } from 'react';
-import { ThemeContext } from 'styled-components';
+import React, {
+    forwardRef,
+    InputHTMLAttributes,
+} from 'react';
 
-import { InputBlock } from './styles';
+import { InputBlock, InputText } from './styles';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
+  isValid?: boolean;
+  inputValue?:string;
+  errors?:string;
+  status?:boolean;
 }
 
-const Input: React.RefForwardingComponent<HTMLInputElement, InputProps> = ({ label, ...rest }, ref) => {
-  //States
-  const [inputValue, setInputValue] = useState('');
-
-  //Contexts
-  const { colors } = useContext(ThemeContext);
-  const InputStyle = {
-    border: `1px solid ${colors.inputOutline}`
-  }
-  return (
+const Input: React.RefForwardingComponent<HTMLInputElement, InputProps> = ({
+    label,
+    children,
+    isValid,
+    inputValue,
+    status,
+    errors,
+    ...rest
+}, ref) => (
     <InputBlock
-      className="InputBlock"
+        className="InputBlock"
     >
-      <label htmlFor={label}>{label}</label>
-      <input
-        {...rest}
-        style={inputValue !== '' ? { ...InputStyle } : {}}
-        id={label}
-        onChange={e => setInputValue(e.target.value)}
-        ref={ref}
-      />
+        <div>
+            <label htmlFor={label}>{label}</label>
+            <span>
+                {errors}
+            </span>
+        </div>
+        <InputText
+            {...rest}
+            id={label}
+            hasValidation={!!isValid}
+            hasStatus={status}
+            ref={ref}
+            hasValue={inputValue || ''}
+        />
+        {children}
     </InputBlock>
-  );
-};
+);
 
 export default forwardRef(Input);

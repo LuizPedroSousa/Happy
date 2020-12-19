@@ -4,7 +4,7 @@ import Container from './styles';
 
 import Header from '../Header';
 import ContentWrapper from '../ContentWrapper';
-import ModalContext from '../../../Store/ContextApi/Modal/context';
+import ModalContext from '../../../Store/ContextApi/Modals/Landing/context';
 
 const LandingContent: React.FC = () => {
     const {

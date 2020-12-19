@@ -1,9 +1,10 @@
 import styled, { keyframes } from 'styled-components';
 import { lighten, shade } from 'polished';
 import { tada } from 'react-animations';
-export const Container = styled.div`
+
+const Container = styled.div`
     width: 100%;
-    height: 123vh;
+    height: 140vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -49,7 +50,7 @@ export const Container = styled.div`
                 span{
                     color: ${props => props.theme.title === 'dark' && props.theme.colors.black};
                 }
-                background-color: ${props => props.theme.title === 'light' ? shade(0.2, props.theme.colors.primary) : props.theme.colors.white};
+                background-color: ${props => (props.theme.title === 'light' ? shade(0.2, props.theme.colors.primary) : props.theme.colors.white)};
             }
         }
     }
@@ -59,7 +60,7 @@ export const Container = styled.div`
     }
 
     .create-orp{
-        background-color: ${props => props.theme.title === 'light' ? props.theme.colors.primary : shade(0.2, props.theme.colors.black)};
+        background-color: ${props => (props.theme.title === 'light' ? props.theme.colors.primary : shade(0.2, props.theme.colors.black))};
         transition: .25s;
         height: 4rem;
         width: 4rem;
@@ -80,9 +81,9 @@ export const Container = styled.div`
         }
         :hover{
             span{
-                color: ${props => props.theme.title === 'light' ? shade(0.6, props.theme.colors.white) : props.theme.colors.black};
+                color: ${props => (props.theme.title === 'light' ? shade(0.6, props.theme.colors.white) : props.theme.colors.black)};
             }
-            background-color: ${props => props.theme.title === 'light' ? lighten(0.2, props.theme.colors.primary) : props.theme.colors.white};
+            background-color: ${props => (props.theme.title === 'light' ? lighten(0.2, props.theme.colors.primary) : props.theme.colors.white)};
         }
     }
 
@@ -94,3 +95,5 @@ export const Container = styled.div`
         }
     }
 `;
+
+export default Container;

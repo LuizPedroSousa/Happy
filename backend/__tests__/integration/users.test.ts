@@ -179,7 +179,7 @@ describe('User profile actions', () => {
             await UserFactoryCreate({ email, password });
 
             const res = await req(app)
-                .get('/users/auth')
+                .post('/users/auth')
                 .expect('Content-Type', 'application/json; charset=utf-8')
                 .send({
                     email,
@@ -195,7 +195,7 @@ describe('User profile actions', () => {
             await UserFactoryCreate({ password });
 
             const res = await req(app)
-                .get('/users/auth')
+                .post('/users/auth')
                 .expect('Content-Type', 'application/json; charset=utf-8')
                 .send({
                     email: 'luizpedrosousa65gmail.com',
@@ -210,7 +210,7 @@ describe('User profile actions', () => {
             const { email } = await UserFactoryCreate();
 
             const res = await req(app)
-                .get('/users/auth')
+                .post('/users/auth')
                 .expect('Content-Type', 'application/json; charset=utf-8')
                 .send({
                     email,
@@ -226,7 +226,7 @@ describe('User profile actions', () => {
             await UserFactoryCreate({ email, password, status: false });
 
             const res = await req(app)
-                .get('/users/auth')
+                .post('/users/auth')
                 .expect('Content-Type', 'application/json; charset=utf-8')
                 .send({
                     email,

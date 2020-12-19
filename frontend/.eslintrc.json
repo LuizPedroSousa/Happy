@@ -39,6 +39,9 @@
         "consistent-return": "warn",
         "react/jsx-indent": "off",
         "react/jsx-indent-props": "off",
-        "arrow-parens": ["error", "as-needed"]
+        "react/jsx-props-no-spreading": ["off"],
+        "react/prop-types": "off",
+        "arrow-parens": ["error", "as-needed"],
+        "no-unused-vars": "warn"
     }
 }

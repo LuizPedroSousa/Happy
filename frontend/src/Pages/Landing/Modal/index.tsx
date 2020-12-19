@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { AiOutlineSetting } from 'react-icons/ai';
 import { BsX } from 'react-icons/bs';
-import ModalContext from '../../../Store/ContextApi/Modal/context';
+import ModalContext from '../../../Store/ContextApi/Modals/Landing/context';
 import {
     Content,
     Exit,

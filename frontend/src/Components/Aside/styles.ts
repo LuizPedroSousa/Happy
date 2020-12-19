@@ -1,10 +1,11 @@
 import styled from 'styled-components';
-import AsideLightBG from '../../Assets/Images/Aside_background.svg';
-import AsideDarkBG from '../../Assets/Images/Aside_background_dark.svg';
 
-export const Wrapper = styled.aside`
-    background-color: ${props => props.theme.colors.primary};
-    background: url(${props => props.theme.title === 'light' ? AsideLightBG : AsideDarkBG}) center;
+const Wrapper = styled.aside`
+    background: linear-gradient(
+        321deg,
+        ${props => props.theme.colors.secondary},
+        ${props => props.theme.colors.primary}
+    );
     height: 80vh;
     padding: 2.8rem;
     display: flex;
@@ -16,3 +17,5 @@ export const Wrapper = styled.aside`
         padding: 3rem;
     }
 `;
+
+export default Wrapper;

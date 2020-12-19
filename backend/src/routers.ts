@@ -21,7 +21,7 @@ Routes.post('/orphanages/create', uploadOrphanage.array('images'), OrphanagesCon
 
 // User flow
 Routes.post('/users/create', uploadUser.single('image'), UserController.create);
-Routes.get('/users/auth', UserController.auth);
+Routes.post('/users/auth', UserController.auth);
 Routes.get('/users/admin', auth, UserController.index);
 Routes.get('/users/admin/show', auth, UserController.show);
 Routes.put('/users/admin/update', auth, uploadUser.single('image'), UserController.update);

@@ -97,7 +97,7 @@ export const Enter = styled.button`
     height: 3.2rem;
     border-radius: .8rem;
     border: 0;
-    background-color: ${props => props.theme.colors.primary};
+    background-color: ${props => props.theme.colors.primaryDarker};
     outline: 0;
     cursor: pointer;
     width: calc(100% - 4rem);

@@ -14,6 +14,7 @@ const HeaderContent = styled.div<HeaderContent>`
     margin: 2rem 0 0;
     opacity: ${props => (props.hasViewModal ? '10%' : 1)};
     img{
+        margin: 1rem 0 0;
         width: 8rem;
     }
     main{

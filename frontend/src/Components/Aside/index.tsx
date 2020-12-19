@@ -1,16 +1,13 @@
 import React from 'react';
 
-import {
-  Wrapper,
-} from './styles';
-const Aside: React.FC = ({ children }) => {
-  return (
+import Wrapper from './styles';
+
+const Aside: React.FC = ({ children }) => (
     <Wrapper
-      className='aside'
+        className="aside"
     >
-      {children}
+        {children}
     </Wrapper>
-  );
-};
+);
 
 export default Aside;

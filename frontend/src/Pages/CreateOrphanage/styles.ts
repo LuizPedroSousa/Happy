@@ -2,7 +2,6 @@ import styled, { keyframes } from 'styled-components';
 
 import { bounceInDown } from 'react-animations';
 
-
 export const Container = styled.div`
     width: 100%;
     height: 100vh;
@@ -31,7 +30,7 @@ export const Container = styled.div`
 `;
 
 export const Title = styled.h1`
-    color: ${props => props.theme.title === 'light' ? props.theme.colors.textComplement : props.theme.colors.white};
+    color: ${props => (props.theme.title === 'light' ? props.theme.colors.textComplement : props.theme.colors.white)};
     font-size: 1.2rem;
     margin: 2rem 0;
 `;

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { AiOutlinePoweroff } from 'react-icons/ai';
-import ModalContext from '../../../../../Store/ContextApi/Modal/context';
+import ModalContext from '../../../../../Store/ContextApi/Modals/Landing/context';
 
 import {
     DashboardContainer,

@@ -10,13 +10,16 @@ declare module 'styled-components' {
             background: string
             primary: string
             primaryDark: string
+            primaryDarker: string
             secondary: string
+            secondaryDark: string
             buttonText: string
             buttonTextDark: string
             buttonPrimary: string
             buttonPrimaryDark: string
             buttonSecondary: string
             textComplement: string
+            textComplementDark: string
             buttonForm: string
             outlineBase: string
             input: string

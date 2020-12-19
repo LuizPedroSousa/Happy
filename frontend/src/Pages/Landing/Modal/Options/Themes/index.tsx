@@ -16,7 +16,7 @@ import {
     SpanPink,
 } from './styles';
 
-import ModalContext from '../../../../../Store/ContextApi/Modal/context';
+import ModalContext from '../../../../../Store/ContextApi/Modals/Landing/context';
 
 const Themes: React.FC = () => {
     const { title } = useContext(ThemeContext);

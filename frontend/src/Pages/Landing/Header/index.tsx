@@ -5,7 +5,7 @@ import HeaderContent from './styles';
 
 import logoImg from '../../../Assets/Images/logo.svg';
 import logoDarkImg from '../../../Assets/Images/logo_dark.svg';
-import ModalContext from '../../../Store/ContextApi/Modal/context';
+import ModalContext from '../../../Store/ContextApi/Modals/Landing/context';
 
 const Header: React.FC = () => {
     const { title } = useContext(ThemeContext);
