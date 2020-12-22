@@ -7,6 +7,7 @@ import Form from '../Form';
 import { Container } from './styles';
 
 const LoginContent: React.FC = () => {
+    // Contexts
     const { status } = useContext(LoginContext);
     return (
         <Container>

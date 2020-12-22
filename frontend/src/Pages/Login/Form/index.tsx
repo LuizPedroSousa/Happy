@@ -37,33 +37,35 @@ const Form: React.FC = () => {
     const [passwordValidation, setPasswordValidation] = useState(false);
     const [emailErrors, setEmailErrors] = useState<string>();
     const [passwordErros, setPasswordErrors] = useState<string>();
+    const [validation, setValidation] = useState(false);
 
     // Contexts
     const { status, setStatus } = useContext(LoginContext);
 
-    // Toggles && Handles
+    // Handles && Toggles
     const toggleCheckbox = () => setCheckbox(!checkbox);
     const toggleViewPassword = () => setViewPassword(!viewPassword);
 
+    // Email Validation
     useEffect(() => {
-        // Email Validation
-        const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (email) {
+            const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             if (!emailRegex.test(email)) {
                 setEmailErrors('Email invalido');
                 return setEmailValidation(false);
             }
+            setEmailErrors('');
+            return setEmailValidation(true);
         }
-        setEmailErrors('');
-        return setEmailValidation(true);
+        return setEmailValidation(false);
     }, [email]);
 
+    // Password Validation
     useEffect(() => {
-        // Password Validation
         if (password) {
             if (!/[\D\d]{3}/g.test(password)) {
                 setPasswordValidation(false);
-                return setPasswordErrors('A senha deve conter pelo menos 3 caracteres.');
+                return setPasswordErrors('A senha deve conter no mínimo 3 caracteres.');
             }
             if (/[\D\d]{13}/g.test(password)) {
                 setPasswordValidation(false);
@@ -81,10 +83,18 @@ const Form: React.FC = () => {
                 setPasswordErrors('A senha não pode conter espaços.');
                 return setPasswordValidation(false);
             }
+            setPasswordErrors('');
+            return setPasswordValidation(true);
         }
-        setPasswordErrors('');
-        return setPasswordValidation(true);
+        return setPasswordValidation(false);
     }, [password]);
+
+    useEffect(() => {
+        if (emailValidation && passwordValidation) {
+            return setValidation(true);
+        }
+        return setValidation(false);
+    }, [emailValidation, passwordValidation]);
 
     const handleLoginSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -99,8 +109,7 @@ const Form: React.FC = () => {
             }
             return history.push('/users/admin/dashboard');
         } catch (err) {
-            // return false
-            return setStatus(!!Number(String(err).replace(/\D/gim, '')));
+            return setStatus(true);
         }
     };
     return (
@@ -108,6 +117,8 @@ const Form: React.FC = () => {
             title="Fazer login"
             buttonName="Entrar"
             onSubmit={handleLoginSubmit}
+            exitPath="/"
+            isValid={validation}
             footer={() => (
                 <Footer>
                     <div>
@@ -174,7 +185,6 @@ const Form: React.FC = () => {
                 </Link>
             </Options>
         </FormUsers>
-
     );
 };
 

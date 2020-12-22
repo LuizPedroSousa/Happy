@@ -29,6 +29,7 @@ export const InputBlock = styled.div`
         align-items:center;
         margin: 2rem 0 .5rem;
         label{
+            position: relative;
             font-size: 1rem;
             color: ${props => (props.theme.title === 'light' ? props.theme.colors.textComplement : props.theme.colors.white)};
         }

@@ -1,10 +1,12 @@
 import { shade } from 'polished';
 import styled from 'styled-components';
 
-import { Link } from 'react-router-dom';
-
 interface IContainer{
   hasFooter: boolean;
+}
+
+interface IButton{
+  hasValid: boolean;
 }
 
 export const Container = styled.form<IContainer>`
@@ -14,7 +16,6 @@ export const Container = styled.form<IContainer>`
   width: 100%;
   background-color: ${props => (props.theme.title === 'dark' ? props.theme.colors.background : props.theme.colors.white)};
   padding: ${props => (props.hasFooter ? '2rem 2rem' : '2rem 2rem 4rem')};
-  position: relative;
   strong{
     width: 100%;
     text-align: left;
@@ -29,12 +30,28 @@ export const Container = styled.form<IContainer>`
   }
 `;
 
-export const Button = styled.button`
+export const ButtonContainer = styled.div`
   width: 100%;
   height: 4.2rem;
+  margin: 2.8rem 0 1rem;
+  z-index: 1;
+  position:relative;
+
+  @media(min-width: 1120px){
+    height: 4rem;
+    margin: 1rem 0 !important;
+  }
+`;
+
+export const Button = styled.button<IButton>`
+  width: 100%;
+  height: 100%;
   border-radius: 1.4rem;
   background-color: ${props => props.theme.colors.buttonForm};
   border: 0;
+  position: relative;
+  z-index: ${props => (props.hasValid ? 1 : -1)};
+  opacity: ${props => (props.hasValid ? 1 : 0.5)};
   outline: 0;
   transition: .25s;
   font: 700 1.4rem Nunito;
@@ -45,22 +62,26 @@ export const Button = styled.button`
   }
 
   @media(min-width: 1120px){
-    height: 4rem;
+    margin: 1rem 0 2.8rem !important;
     font-size: 1rem;
+    bottom: 1rem;
   }
 `;
 
-export const Exit = styled(Link)`
+export const Exit = styled.button`
   width: 3.5rem;
   height: 3.5rem;
   display: flex;
   justify-content:center;
   position: relative;
+  cursor: pointer;
   left: 7rem;
   margin: 0 0 2rem;
   transition: .25s;
   align-items:center;
   border-radius: 1.2rem;
+  border: 0;
+  outline: 0;
   background-color: ${props => (props.theme.title === 'dark' ? props.theme.colors.black : props.theme.colors.background)};
   span{
     transition: .25s;

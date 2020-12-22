@@ -10,6 +10,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   isValid?: boolean;
   inputValue?:string;
   errors?:string;
+  InputBlockRender?: any;
   status?:boolean;
 }
 
@@ -19,10 +20,12 @@ const Input: React.RefForwardingComponent<HTMLInputElement, InputProps> = ({
     isValid,
     inputValue,
     status,
+    InputBlockRender,
     errors,
     ...rest
 }, ref) => (
     <InputBlock
+        as={InputBlockRender && InputBlockRender}
         className="InputBlock"
     >
         <div>

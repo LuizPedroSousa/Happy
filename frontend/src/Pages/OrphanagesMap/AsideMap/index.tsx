@@ -19,12 +19,15 @@ const AsideMap: React.FC = () => {
 
     // Others Hocks
     const history = useHistory();
+
+    // Handles && Toggles
+    const handlePushToLanding = () => history.push('/');
     return (
         <Aside>
             <Header>
                 <div>
                     <img src={title === 'light' ? markLightImg : markDarkImg} alt="markermap" />
-                    <Arrow onClick={() => history.goBack()}>
+                    <Arrow onClick={handlePushToLanding}>
                         <span>
                             <BiArrowBack />
                         </span>
